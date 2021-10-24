@@ -19,11 +19,21 @@ export class PrefixCommand extends Command {
 
         if (!argument.success) return msg.channel.send(`My prefix for this guild is **${guildPrefix.prefix ?? config.prefix}**`);
 
-        if (argument.value.length > 5) return msg.channel.send(`Prefix shouldn't be longer than 5 characters. Yours has ${argument.value.length}`);
+        if (argument.value.length > 5) return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription(`Prefix shouldn't be longer than 5 characters. Yours has ${argument.value.length}`)
+                .setColor("RED")
+            ]
+        })
 
         guildPrefix.prefix = argument.value;
         await guildPrefix.save()
 
-        return msg.channel.send(`My prefix has changed to **${argument.value}**`);
+        return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription(`My prefix has changed to **${argument.value}**`)
+                .setColor(msg.guild?.me?.displayHexColor!)
+            ]
+        });
     }
 }
