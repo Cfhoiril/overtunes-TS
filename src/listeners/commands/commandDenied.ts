@@ -13,8 +13,7 @@ export class clientListener extends Listener {
         return message.channel.send({
             embeds: [
                 new MessageEmbed()
-                    .setAuthor("Something wrong when running the command", undefined, "https://discord.gg/hM8U8cHtwu")
-                    .setDescription(`\`\`\`${content}\`\`\``)
+                    .setDescription(`${content}`)
                     .setColor("RED")
             ]
         });
