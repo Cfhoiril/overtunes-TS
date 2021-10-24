@@ -1,9 +1,9 @@
-import { CommandOptions, Command, Args } from "@sapphire/framework";
-import { ApplyOptions } from "@sapphire/decorators";
-import { Message, MessageEmbed } from "discord.js";
-import util from "util";
 import { codeBlock } from "@discordjs/builders";
-import hastebin from "hastebin-gen";
+import { ApplyOptions } from "@sapphire/decorators";
+import { Args, Command, CommandOptions } from "@sapphire/framework";
+import { Message } from "discord.js";
+import petitio from "petitio";
+import util from "util";
 
 @ApplyOptions<CommandOptions>({
     name: "eval",
@@ -13,7 +13,6 @@ import hastebin from "hastebin-gen";
     aliases: ["ev"],
     requiredClientPermissions: ["SEND_MESSAGES"],
 })
-
 export class EvalCommand extends Command {
     async messageRun(message: Message, args: Args) {
         const msg = message;
@@ -24,11 +23,17 @@ export class EvalCommand extends Command {
         try {
             let { evaled } = await this.parseEval(eval(code)) /* eslint-disable-line */
             if (typeof evaled !== "string") evaled = util.inspect(evaled);
-            msg.channel.send({
-                content: codeBlock("js", evaled)
-            });
+
+            if (evaled.length > 1024) {
+                const { key } = await petitio("https://haste-server.stevanvincent.repl.co/documents", "POST").body(evaled).json();
+                await msg.channel.send(`https://haste-server.stevanvincent.repl.co//${key}.js`);
+            } else {
+                await msg.channel.send({
+                    content: codeBlock("js", evaled)
+                });
+            }
         } catch (e) {
-            msg.channel.send({
+            await msg.channel.send({
                 content: codeBlock("js", e as string)
             });
         }
