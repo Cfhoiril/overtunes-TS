@@ -17,7 +17,7 @@ export class readyEvent extends Listener {
         })
 
         await mongoose.connect(config.mongo).then(() => {
-            console.log(chalk.green('🍃 MongoDB connected.'));
+            console.log(chalk.green('🍃 MongoDB connected'));
         }).catch((err) => {
             console.log('❌ MongoDB error - ' + err);
             return process.exit(1)
