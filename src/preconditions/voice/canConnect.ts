@@ -10,7 +10,7 @@ import { isStageChannel, isVoiceChannel } from "@sapphire/discord.js-utilities";
 export abstract class canConnect extends Precondition {
     public async run(msg: Message) {
         const checkIsAllow = this.shouldRun(msg);
-        if (!checkIsAllow) return this.error({ message: "" });
+        if (!checkIsAllow) return this.error({ message: "I can't connect to your **Voice Channel**" });
         return this.ok();
     }
 
