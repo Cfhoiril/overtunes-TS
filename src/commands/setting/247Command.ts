@@ -11,7 +11,7 @@ import music from "../../database/Manager/MusicManager";
     cooldownLimit: 2
 })
 
-class TwentyfoursevenCommand extends Command {
+export class TwentyfoursevenCommand extends Command {
     async messageRun(msg: Message) {
         const data = await music.findOne({ Guild: msg.guildId });
 
