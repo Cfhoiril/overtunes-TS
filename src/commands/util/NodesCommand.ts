@@ -18,11 +18,11 @@ export class NodesCommand extends Command {
 
         this.container.client.manager.nodes.map((x) => {
             if (player && player.node.options.identifier == x.options.identifier)
-                color = "+";
-            else if (!x.connected)
                 color = ">";
-            else
+            else if (!x.connected)
                 color = "-";
+            else
+                color = "+";
 
             let mana = `\`\`\`diff\n
 ${color} ID        : ${x.options.identifier}
@@ -36,6 +36,6 @@ ${color} Uptime    : ${prettyMs(x.stats.uptime, { colonNotation: true, compact: 
 
         }).join("\n");
 
-        msg.channel.send(`${k.join("\n")}`);
+        msg.channel.send(`\`🔴 Down | \🟢 Up | \⚪\ Current\`\n${k.join("\n")}`);
     }
 }
