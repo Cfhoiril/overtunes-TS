@@ -16,7 +16,7 @@ export abstract class havePlayer extends Precondition {
     }
 
     private shouldRun(msg: Message) {
-        if (!this.container.client.manager.get(msg.guild?.id!)) return false
+        if (!this.container.client.manager.get(msg.guild?.id!)) return false;
         return true;
     }
 }
