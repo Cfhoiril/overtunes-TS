@@ -17,7 +17,7 @@ export abstract class canConnect extends Precondition {
     private shouldRun(msg: Message) {
         if (msg.guild?.me?.permissions.has("ADMINISTRATOR")) return true;
         if (msg.guild?.me?.voice.channel) return true;
-        if (msg.member?.voice.channel?.full && !msg.member.voice.channel.permissionsFor(this.container.client.user!)?.has("MOVE_MEMBERS")) return false;
+        if (msg.member?.voice.channel?.full && msg.member.voice.channel.permissionsFor(this.container.client.user!)?.has("MOVE_MEMBERS")) return true;
         if (isStageChannel(msg.member?.voice.channel) && !msg.guild?.me?.voice.channel && msg.member?.voice.channel?.joinable) return true;
         if (isVoiceChannel(msg.member?.voice.channel) && !msg.guild?.me?.voice.channel && msg.member?.voice.channel?.joinable && msg.member?.voice.channel?.speakable) return true;
         return false;
