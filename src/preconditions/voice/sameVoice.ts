@@ -14,9 +14,9 @@ export abstract class sameVoice extends Precondition {
     }
 
     private shouldRun(msg: Message) {
-        if (msg.guild?.me?.voice.channelId) return false;
-        if (this.container.client.manager.get(msg.guildId!) && msg.member?.voice.channelId === msg.guild?.me?.voice.channelId) return false;
-        return true;
+        if (!this.container.client.manager.get(msg.guild?.id!)) return true;
+        if (!msg.guild?.me?.voice.channelId) return true;
+        return msg.member?.voice.channelId === msg.guild?.me?.voice.channelId;
     }
 }
 
