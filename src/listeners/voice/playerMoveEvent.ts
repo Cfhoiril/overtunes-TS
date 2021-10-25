@@ -12,7 +12,15 @@ import stay from "../../database/Manager/MusicManager";
 
 export class playerMoveEvent extends Listener {
     async run(player: Player, newChannel: string, oldChannel: string) {
-        if (!newChannel) {
+        if (oldChannel && newChannel) {
+            player.voiceChannel = newChannel;
+
+            if (player.paused) return;
+            setTimeout(() => {
+                player.pause(true);
+                setTimeout(() => player.pause(false), this.container.client.ws.ping * 2);
+            }, this.container.client.ws.ping * 2);
+        } else {
             const prem = await stay.findOne({ Guild: player.guild });
             if (prem.Stay === true) {
                 if (!player?.get("pause")) {
@@ -39,15 +47,7 @@ export class playerMoveEvent extends Listener {
                     return;
                 }
             }
-            return player.destroy();
-        } else if (oldChannel && newChannel) {
-            player.voiceChannel = newChannel;
-
-            if (player.paused) return;
-            setTimeout(() => {
-                player.pause(true);
-                setTimeout(() => player.pause(false), this.container.client.ws.ping * 2);
-            }, this.container.client.ws.ping * 2);
+            return player?.destroy();
         }
     }
 }
