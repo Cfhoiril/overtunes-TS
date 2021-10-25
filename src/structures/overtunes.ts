@@ -9,8 +9,7 @@ import lavalink from "../lavalink";
 import guild from "../database/Manager/GuildManager"
 
 class Overtunes extends SapphireClient {
-
-    constructor() {
+    public constructor() {
         super({
             fetchPrefix: async (msg: Message) => {
                 const guildData = await guild.findOne({ id: msg.guild?.id! });
@@ -43,7 +42,7 @@ class Overtunes extends SapphireClient {
             baseUserDirectory: resolve(join(__dirname, "..")),
             caseInsensitivePrefixes: true,
             caseInsensitiveCommands: true
-        })
+        });
     }
 
     public manager = new Manager({
@@ -63,4 +62,4 @@ declare module "@sapphire/framework" {
     }
 }
 
-export = new Overtunes().login()
+export = new Overtunes().login(config.token)

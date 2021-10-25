@@ -11,6 +11,16 @@
     "strict": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true
-  }
+    "experimentalDecorators": true,
+    "typeRoots": [
+      "node_modules/@types",
+    ],
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "node_modules/**"
+  ]
 }

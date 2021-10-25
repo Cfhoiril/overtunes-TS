@@ -23,7 +23,7 @@ export class readyEvent extends Listener {
             return process.exit(1)
         });
 
-
+        this.container.client.manager.init(this.container.client.user!.id);
         this.container.logger.info(chalk.green(`👋 Logged in as ${chalk.white(this.container.client.user?.username)}`));
     }
 }
