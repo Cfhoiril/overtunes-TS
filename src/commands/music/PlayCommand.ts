@@ -12,7 +12,7 @@ import prefix from "../../database/Manager/GuildManager";
     preconditions: ["inVoice", "canConnect", "sameVoice"]
 })
 
-export class PrefixCommand extends Command {
+export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
         const argument = await args.restResult("string");
         let player = this.container.client.manager.get(msg.guild?.id!);
