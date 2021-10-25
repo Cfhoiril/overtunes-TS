@@ -39,7 +39,7 @@ Total Channels  : ${this.container.client.channels.cache.size} Channels
 Memory Usage    : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} Mb\`\`\`
 
 **Developer**\`\`\`md\n
-${dev.map(x => `${x.username}#${x.discriminator}`).join(", ")}\`\`\`\n
+${dev.map(x => `${x.username}#${x.discriminator}`).join(", ")}\`\`\`
 
 **Special thanks 💖**\`\`\`md\n
 ${help.map(x => `${x.username}#${x.discriminator}`).join(", ")}\`\`\`\n
