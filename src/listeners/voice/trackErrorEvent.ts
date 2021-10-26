@@ -20,7 +20,7 @@ export class trackErrorEvent extends Listener {
         channel.send({
             embeds: [new MessageEmbed()
                 .setColor("RED")
-                .setDescription("Track is error, Skipping to next song")]
+                .setDescription("Track is error, Skipping to next tracks")]
         }).then(ms => setTimeout(function () { ms.delete() }, 10000))
     }
 }
