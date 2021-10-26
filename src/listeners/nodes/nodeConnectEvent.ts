@@ -11,7 +11,7 @@ import chalk from "chalk";
     event: "nodeConnect"
 })
 
-export class playerMoveEvent extends Listener {
+export class nodeConnectEvent extends Listener {
     async run(node: Node) {
         console.log(chalk.green(`🎧 ${node.options.identifier} Connected`))
     }
