@@ -9,7 +9,7 @@ import prefix from "../../database/Manager/GuildManager";
     name: "play",
     aliases: ["p"],
     requiredClientPermissions: ["CONNECT", "SPEAK"],
-    preconditions: ["inVoice", "canConnect", "sameVoice"]
+    preconditions: ["inVoice", "canConnect", "sameVoice", "isSpecialChannel"]
 })
 
 export class MusicCommand extends Command {

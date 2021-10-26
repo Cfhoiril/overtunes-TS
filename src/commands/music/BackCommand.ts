@@ -6,7 +6,7 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
     name: "back",
     aliases: ["previous", "before", "b"],
     requiredClientPermissions: ["CONNECT", "SPEAK"],
-    preconditions: ["inVoice", "sameVoice", "havePlayer", "isDjOnly"]
+    preconditions: ["inVoice", "sameVoice", "havePlayer", "isDjOnly", "isSpecialChannel"]
 })
 
 export class MusicCommand extends Command {
