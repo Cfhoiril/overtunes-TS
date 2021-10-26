@@ -1,7 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Listener, ListenerOptions } from "@sapphire/framework";
 import chalk from "chalk";
-import * as config from "../config.json";
+import * as config from "../../config.json";
 import mongoose, { connect } from "mongoose";
 
 @ApplyOptions<ListenerOptions>({
