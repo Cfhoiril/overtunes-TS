@@ -5,7 +5,8 @@ import exec from "child_process";
 
 @ApplyOptions<CommandOptions>({
     name: "execute",
-    aliases: ["exec"]
+    aliases: ["exec"],
+    preconditions: ["ownerOnly"],
 })
 
 export class ExecCommand extends Command {
