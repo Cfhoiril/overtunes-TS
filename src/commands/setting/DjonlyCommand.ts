@@ -6,6 +6,7 @@ import music from "../../database/Manager/MusicManager";
 @ApplyOptions<CommandOptions>({
     name: "djonly",
     requiredUserPermissions: ["MANAGE_GUILD"],
+    aliases: ["enabledj", "dj"],
     cooldownDelay: 10000,
     cooldownLimit: 2
 })
@@ -22,7 +23,7 @@ export class AnnounceCommand extends Command {
 
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription('**DJONLY Mode Activated**\n\nMake sure you have roles named `DJ` at your server.')
+                    .setDescription('DjOnly mode **Activated**, make sure you have role named **DJ** at your server')
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
@@ -32,7 +33,7 @@ export class AnnounceCommand extends Command {
 
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription('**DJONLY Mode Activated**\n\nMake sure you have roles named `DJ` at your server.')
+                    .setDescription('DjOnly mode **Activated**, make sure you have role named **DJ** at your server')
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
@@ -42,7 +43,7 @@ export class AnnounceCommand extends Command {
 
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription('**DJONLY Mode Deactivated**')
+                    .setDescription('DjOnly mode **Deactivated**')
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
