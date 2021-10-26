@@ -7,7 +7,8 @@ import music from "../../database/Manager/MusicManager";
     name: "setup",
     requiredUserPermissions: ["MANAGE_GUILD"],
     cooldownDelay: 30000,
-    cooldownLimit: 2
+    cooldownLimit: 2,
+    requiredClientPermissions: ['MANAGE_CHANNELS', 'MANAGE_MESSAGES', 'VIEW_CHANNEL']
 })
 
 export class SetupCommand extends Command {
