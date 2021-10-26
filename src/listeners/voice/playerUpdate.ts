@@ -37,10 +37,10 @@ export class nodeRawEvent extends Listener {
             if (player) {
                 const channel = this.container.client.channels.cache.get(player?.textChannel!) as TextBasedChannelTypes;
 
-                let first = new MessageButton()
+                let stop = new MessageButton()
                     .setStyle('PRIMARY')
-                    .setCustomId('back1')
-                    .setLabel('⏮️')
+                    .setCustomId('stop1')
+                    .setLabel('⏹')
 
                 let next = new MessageButton()
                     .setStyle('PRIMARY')
@@ -64,8 +64,8 @@ export class nodeRawEvent extends Listener {
                     .setCustomId('shuffle1')
 
                 let row = new MessageActionRow()
+                    .addComponents(stop)
                     .addComponents(shuffle)
-                    .addComponents(first)
                     .addComponents(pause)
                     .addComponents(next)
                     .addComponents(loop)
