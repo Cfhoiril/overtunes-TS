@@ -20,35 +20,39 @@ export class SetupCommand extends Command {
             .setColor(msg.guild?.me?.displayHexColor!)
             .setImage('https://cdn.discordapp.com/attachments/843462619158675487/890162871915393024/386720.jpeg')
 
-        let first = new MessageButton()
+        let stop = new MessageButton()
             .setStyle('PRIMARY')
-            .setCustomId('back1')
-            .setLabel('⏮️')
+            .setCustomId('stop1')
+            .setLabel('⏹')
+            .setDisabled(true)
 
         let next = new MessageButton()
             .setStyle('PRIMARY')
             .setCustomId('skip1')
             .setLabel('⏭️')
+            .setDisabled(true)
 
         let pause = new MessageButton()
             .setCustomId('pause1')
             .setLabel('▶')
             .setStyle('PRIMARY')
+            .setDisabled(true)
 
         let loop = new MessageButton()
             .setStyle('PRIMARY')
             .setLabel('🔁')
             .setCustomId('loop1')
-
+            .setDisabled(true)
 
         let shuffle = new MessageButton()
             .setStyle('PRIMARY')
             .setLabel('🔀')
             .setCustomId('shuffle1')
+            .setDisabled(true)
 
         let row = new MessageActionRow()
+            .addComponents(stop)
             .addComponents(shuffle)
-            .addComponents(first)
             .addComponents(pause)
             .addComponents(next)
             .addComponents(loop)
@@ -56,6 +60,7 @@ export class SetupCommand extends Command {
         msg.guild?.channels.create(`${this.container.client.user?.username}-music-request`, {
             type: "GUILD_TEXT",
         }).then(async (x) => {
+            x.setTopic("⏹ Stop, 🔀 Shuffle, ⏸ Pause/Resume, ⏭ Skip, 🔁 Repeat")
             const react = await x.send({ content: 'Join a voice channel then play something', embeds: [pl], components: [row] })
             data.Channel = x.id
             data.Message = react.id
