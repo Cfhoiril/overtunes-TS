@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ApplyOptions } from "@sapphire/decorators";
 import { Listener, ListenerOptions } from "@sapphire/framework";
 import { Track, Player, Node } from "erela.js";
@@ -13,8 +14,8 @@ import chalk from "chalk";
 
 export class nodeConnectEvent extends Listener {
     async run(node: Node) {
-        for (const players of [...bot.manager.players.filter(x => x.node === node).values()]) {
-            const newNode = bot.manager.nodes.get(bot.manager.leastLoadNodes.first()?.options.identifier);
+        for (const players of [...this.container.client.manager.players.filter(x => x.node === node).values()]) {
+            const newNode = this.container.client.manager.nodes.get(this.container.client.manager.leastLoadNodes.first()?.options.identifier as string);
 
             const playOptions = {
                 op: "play",
@@ -23,8 +24,8 @@ export class nodeConnectEvent extends Listener {
                 startTime: players.position,
                 volume: players.volume,
             };
-            await newNode.send(players.voiceState);
-            await newNode.send(playOptions);
+            await newNode?.send(players.voiceState);
+            await newNode?.send(playOptions);
             players.node = newNode;
         }
     }
