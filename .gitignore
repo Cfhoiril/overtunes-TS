@@ -4,5 +4,6 @@ package-lock.json
 lavalink.ts
 procfile
 plugin.ts
+config.ts
 
 dist
