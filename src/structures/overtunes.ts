@@ -5,8 +5,8 @@ import { Manager } from "erela.js";
 import { join, resolve } from "path";
 // Config
 import * as config from "../config.json";
-import lavalink from "../lavalink";
-import plugin from "../plugin";
+import lavalink from "../config/lavalink";
+import plugin from "../config/plugin";
 import guild from "../database/Manager/GuildManager"
 
 class Overtunes extends SapphireClient {
