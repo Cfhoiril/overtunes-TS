@@ -1,7 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Precondition, PreconditionOptions } from "@sapphire/framework";
 import { Message } from "discord.js";
-import * as config from "../config.json";
+import * as config from "../config/config.json";
 
 @ApplyOptions<PreconditionOptions>({
     name: "ownerOnly"

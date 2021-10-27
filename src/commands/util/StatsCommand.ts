@@ -2,7 +2,7 @@ import { CommandOptions, Command, Args } from "@sapphire/framework";
 import { ApplyOptions } from "@sapphire/decorators";
 import { Message, MessageEmbed, MessageButton, MessageActionRow, User } from "discord.js";
 import prettyMs from "pretty-ms";
-import { helper, developer } from "../../config.json";
+import { helper, developer } from "../../config/config.json";
 
 @ApplyOptions<CommandOptions>({
     name: "aboutme",
