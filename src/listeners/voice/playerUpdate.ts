@@ -35,82 +35,84 @@ export class nodeRawEvent extends Listener {
         if (payload.op === "playerUpdate") {
             const player = this.container.client.manager.get(payload.guildId);
             if (player) {
-                const channel = this.container.client.channels.cache.get(player?.textChannel!) as TextBasedChannelTypes;
+                if (player.queue.current) {
+                    const channel = this.container.client.channels.cache.get(player?.textChannel!) as TextBasedChannelTypes;
 
-                let stop = new MessageButton()
-                    .setStyle('PRIMARY')
-                    .setCustomId('stop1')
-                    .setLabel('⏹')
+                    let stop = new MessageButton()
+                        .setStyle('PRIMARY')
+                        .setCustomId('stop1')
+                        .setLabel('⏹')
 
-                let next = new MessageButton()
-                    .setStyle('PRIMARY')
-                    .setCustomId('skip1')
-                    .setLabel('⏭️')
+                    let next = new MessageButton()
+                        .setStyle('PRIMARY')
+                        .setCustomId('skip1')
+                        .setLabel('⏭️')
 
-                let pause = new MessageButton()
-                    .setCustomId('pause1')
-                    .setLabel(`${player?.paused ? '▶' : '⏸'}`)
-                    .setStyle(`${player?.paused ? 'SUCCESS' : 'PRIMARY'}`)
+                    let pause = new MessageButton()
+                        .setCustomId('pause1')
+                        .setLabel(`${player?.paused ? '▶' : '⏸'}`)
+                        .setStyle(`${player?.paused ? 'SUCCESS' : 'PRIMARY'}`)
 
-                let loop = new MessageButton()
-                    .setStyle(`${player?.queueRepeat ? 'SUCCESS' : player?.trackRepeat ? 'SUCCESS' : 'PRIMARY'}`)
-                    .setLabel(`${player?.queueRepeat ? '🔁' : player?.trackRepeat ? '🔂' : '🔁'}`)
-                    .setCustomId('loop1')
+                    let loop = new MessageButton()
+                        .setStyle(`${player?.queueRepeat ? 'SUCCESS' : player?.trackRepeat ? 'SUCCESS' : 'PRIMARY'}`)
+                        .setLabel(`${player?.queueRepeat ? '🔁' : player?.trackRepeat ? '🔂' : '🔁'}`)
+                        .setCustomId('loop1')
 
 
-                let shuffle = new MessageButton()
-                    .setStyle('PRIMARY')
-                    .setLabel('🔀')
-                    .setCustomId('shuffle1')
+                    let shuffle = new MessageButton()
+                        .setStyle('PRIMARY')
+                        .setLabel('🔀')
+                        .setCustomId('shuffle1')
 
-                let row = new MessageActionRow()
-                    .addComponents(stop)
-                    .addComponents(shuffle)
-                    .addComponents(pause)
-                    .addComponents(next)
-                    .addComponents(loop)
+                    let row = new MessageActionRow()
+                        .addComponents(stop)
+                        .addComponents(shuffle)
+                        .addComponents(pause)
+                        .addComponents(next)
+                        .addComponents(loop)
 
-                const check = await Set.findOne({ Guild: player?.guild });
+                    const check = await Set.findOne({ Guild: player?.guild });
 
-                if (!channel || channel === null) return check.Channel = null, check.Message = null, check.save();
-                if (!check || check.Channel === null || check.Message === null) return;
-                player.textChannel = check.Channel;
+                    if (!channel || channel === null) return check.Channel = null, check.Message = null, check.save();
+                    if (!check || check.Channel === null || check.Message === null) return;
+                    player.textChannel = check.Channel;
 
-                channel.messages.fetch(check.Message).catch(e => {
-                    check.Channel = null
-                    check.Message = null
-                    check.save()
+                    channel.messages.fetch(check.Message).catch(e => {
+                        check.Channel = null
+                        check.Message = null
+                        check.save()
 
-                    return channel.send({
-                        embeds: [new MessageEmbed()
-                            .setDescription('Template messages not found, back to normal mode')
-                            .setColor('RED')
-                        ]
-                    });
-                })
+                        return channel.send({
+                            embeds: [new MessageEmbed()
+                                .setDescription('Template messages not found, back to normal mode')
+                                .setColor('RED')
+                            ]
+                        });
+                    })
 
-                let embeds = new MessageEmbed()
-                    .setTitle('Now playing')
-                    .setDescription(`${player?.queue.current?.title} [${player?.queue.current?.requester}]`)
-                    .setColor(this.container.client.guilds?.cache?.get(player?.guild)?.me?.displayHexColor!)
-                    .setImage(`${images[Math.floor(Math.random() * images.length)]}`)
-                    .setFooter(`Duration: ${player?.queue.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration!)} | Total Songs: ${player?.queue?.size} | Volume: ${player?.volume}`)
+                    let embeds = new MessageEmbed()
+                        .setTitle('Now playing')
+                        .setDescription(`${player?.queue.current?.title} [${player?.queue.current?.requester}]`)
+                        .setColor(this.container.client.guilds?.cache?.get(player?.guild)?.me?.displayHexColor!)
+                        .setImage(`${images[Math.floor(Math.random() * images.length)]}`)
+                        .setFooter(`Duration: ${player?.queue.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration!)} | Total Songs: ${player?.queue?.size} | Volume: ${player?.volume}`)
 
-                let months = date.format(new Date(), 'MMMM');
-                if (months.toLowerCase().includes("october")) embeds.setImage(`${imagesHalloween[Math.floor(Math.random() * imagesHalloween.length)]}`);
+                    let months = date.format(new Date(), 'MMMM');
+                    if (months.toLowerCase().includes("october")) embeds.setImage(`${imagesHalloween[Math.floor(Math.random() * imagesHalloween.length)]}`);
 
-                channel.messages.fetch(check.Message).then(x => {
-                    try {
-                        x.edit({
-                            content: null,
-                            embeds: [embeds],
-                            components: [row]
-                        })
-                    } catch {
-                        return;
-                    }
-                })
+                    channel.messages.fetch(check.Message).then(x => {
+                        try {
+                            x.edit({
+                                content: null,
+                                embeds: [embeds],
+                                components: [row]
+                            })
+                        } catch {
+                            return;
+                        }
+                    })
 
+                }
             }
         }
     }
