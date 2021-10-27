@@ -19,6 +19,7 @@ export class playerDestroyEvent extends Listener {
 
         const lastEmbed = new MessageEmbed()
             .setTitle('No Music currently playing')
+            .setDescription("[Commands](https://overtunes.netlify.app/docs/basic-use/commands) | [Invite](https://overtunes.netlify.app/docs/get-started/inviting-the-bot) | [Support](https://discord.gg/hM8U8cHtwu)")
             .setColor(this.container.client.guilds.cache.get(player.guild)?.me?.displayHexColor!)
             .setImage('https://cdn.discordapp.com/attachments/843462619158675487/890162871915393024/386720.jpeg')
 
