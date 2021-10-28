@@ -26,7 +26,7 @@ export class EvalCommand extends Command {
 
             if (evaled.length > 1024) {
                 const { key } = await petitio("https://haste-server.stevanvincent.repl.co/documents", "POST").body(evaled).json();
-                await msg.channel.send(`https://haste-server.stevanvincent.repl.co//${key}.js`);
+                await msg.channel.send(`https://haste-server.stevanvincent.repl.co/${key}.js`);
             } else {
                 await msg.channel.send({
                     content: codeBlock("js", evaled)
