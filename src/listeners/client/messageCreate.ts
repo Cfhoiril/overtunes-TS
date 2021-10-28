@@ -41,119 +41,121 @@ export class messageCreate extends Listener {
 
             if (content.startsWith(mention1)) return;
             else if (content.startsWith(mention2)) return;
-            else if (data.Channel === msg.channelId) {
-                if (!msg.member?.voice?.channel) return msg.channel.send({
-                    embeds: [new MessageEmbed()
-                        .setDescription("You are not in the **Voice Channel**")
-                        .setColor('RED')
-                    ]
-                });
-
-                if (msg.member.voice.channel.type === 'GUILD_STAGE_VOICE') {
-                    if (!msg.member.voice.channel.joinable) return msg.channel.send({
+            else if (data) {
+                if (data.Channel === msg.channelId) {
+                    if (!msg.member?.voice?.channel) return msg.channel.send({
                         embeds: [new MessageEmbed()
-                            .setDescription("I can't connect to your **Voice Channel**")
+                            .setDescription("You are not in the **Voice Channel**")
                             .setColor('RED')
                         ]
                     });
-                }
 
-                if (!msg.member?.voice?.channel?.permissionsFor(this.container.client.user!)?.has("CONNECT") || !msg.member?.voice?.channel?.permissionsFor(this.container.client.user!)?.has("SPEAK") || (msg.member.voice.channel.full && !msg.member?.voice?.channel?.permissionsFor(this.container.client.user!)?.has('MOVE_MEMBERS'))) {
-                    return msg.channel.send({
-                        embeds: [new MessageEmbed()
-                            .setDescription("I can't connect to your **Voice Channel**")
-                            .setColor('RED')
-                        ]
-                    });
-                }
+                    if (msg.member.voice.channel.type === 'GUILD_STAGE_VOICE') {
+                        if (!msg.member.voice.channel.joinable) return msg.channel.send({
+                            embeds: [new MessageEmbed()
+                                .setDescription("I can't connect to your **Voice Channel**")
+                                .setColor('RED')
+                            ]
+                        });
+                    }
 
-                let player = this.container.client.manager.get(msg.guildId!);
-                if (!player) {
-                    player = this.container.client.manager.create({
-                        guild: msg.guildId as string,
-                        voiceChannel: msg.member?.voice.channelId as string,
-                        textChannel: msg.channelId as string,
-                        volume: 75,
-                        selfDeafen: false,
-                    })
-                }
+                    if (!msg.member?.voice?.channel?.permissionsFor(this.container.client.user!)?.has("CONNECT") || !msg.member?.voice?.channel?.permissionsFor(this.container.client.user!)?.has("SPEAK") || (msg.member.voice.channel.full && !msg.member?.voice?.channel?.permissionsFor(this.container.client.user!)?.has('MOVE_MEMBERS'))) {
+                        return msg.channel.send({
+                            embeds: [new MessageEmbed()
+                                .setDescription("I can't connect to your **Voice Channel**")
+                                .setColor('RED')
+                            ]
+                        });
+                    }
 
-                if (player.state !== "CONNECTED") {
-                    player.connect();
-                    player.set("autoplay", false);
-                }
+                    let player = this.container.client.manager.get(msg.guildId!);
+                    if (!player) {
+                        player = this.container.client.manager.create({
+                            guild: msg.guildId as string,
+                            voiceChannel: msg.member?.voice.channelId as string,
+                            textChannel: msg.channelId as string,
+                            volume: 75,
+                            selfDeafen: false,
+                        })
+                    }
 
-                let res;
-                const search = msg.content;
+                    if (player.state !== "CONNECTED") {
+                        player.connect();
+                        player.set("autoplay", false);
+                    }
 
-                try {
-                    res = await player.search(search!, msg.author)
-                    if (res.loadType === 'LOAD_FAILED') {
+                    let res;
+                    const search = msg.content;
+
+                    try {
+                        res = await player.search(search!, msg.author)
+                        if (res.loadType === 'LOAD_FAILED') {
+                            return msg.channel.send({
+                                embeds: [new MessageEmbed()
+                                    .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
+                                    .setDescription(`\`\`\`${res.exception?.message!}\`\`\``)
+                                    .setColor("RED")
+                                ]
+                            })
+                        }
+
+                    } catch (err) {
                         return msg.channel.send({
                             embeds: [new MessageEmbed()
                                 .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
-                                .setDescription(`\`\`\`${res.exception?.message!}\`\`\``)
+                                .setDescription(`\`\`\`${err}\`\`\``)
                                 .setColor("RED")
                             ]
                         })
                     }
 
-                } catch (err) {
-                    return msg.channel.send({
-                        embeds: [new MessageEmbed()
-                            .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
-                            .setDescription(`\`\`\`${err}\`\`\``)
-                            .setColor("RED")
-                        ]
-                    })
-                }
-
-                switch (res.loadType) {
-                    case "NO_MATCHES":
-                        return msg.channel.send({
-                            embeds: [new MessageEmbed()
-                                .setDescription("There were no results found")
-                                .setColor("RED")
-                            ]
-                        });
-
-                    case "SEARCH_RESULT":
-                        player.queue.add(res.tracks[0]);
-                        if (!player.playing && !player.paused && !player.queue.size) {
-                            return player.play();
-                        } else {
+                    switch (res.loadType) {
+                        case "NO_MATCHES":
                             return msg.channel.send({
                                 embeds: [new MessageEmbed()
-                                    .setDescription(`Added ${res.tracks[0].title} [${msg.author}]`)
+                                    .setDescription("There were no results found")
+                                    .setColor("RED")
+                                ]
+                            });
+
+                        case "SEARCH_RESULT":
+                            player.queue.add(res.tracks[0]);
+                            if (!player.playing && !player.paused && !player.queue.size) {
+                                return player.play();
+                            } else {
+                                return msg.channel.send({
+                                    embeds: [new MessageEmbed()
+                                        .setDescription(`Added ${res.tracks[0].title} [${msg.author}]`)
+                                        .setColor(msg.guild?.me?.displayHexColor!)
+                                        .setTimestamp()]
+                                });
+                            }
+
+                        case "TRACK_LOADED":
+                            player.queue.add(res.tracks[0]);
+                            if (!player.playing && !player.paused && !player.queue.size) {
+                                return player.play();
+                            } else {
+                                return msg.channel.send({
+                                    embeds: [new MessageEmbed()
+                                        .setDescription(`Added ${res.tracks[0].title} [${msg.author}]`)
+                                        .setColor(msg.guild?.me?.displayHexColor!)
+                                        .setTimestamp()]
+                                });
+                            }
+
+                        case "PLAYLIST_LOADED":
+                            player.queue.add(res.tracks)
+                            if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
+                            return msg.channel.send({
+                                embeds: [new MessageEmbed()
+                                    .setDescription(`Added ${res.tracks.length} tracks from ${res.playlist?.name}`)
                                     .setColor(msg.guild?.me?.displayHexColor!)
                                     .setTimestamp()]
                             });
-                        }
+                    }
 
-                    case "TRACK_LOADED":
-                        player.queue.add(res.tracks[0]);
-                        if (!player.playing && !player.paused && !player.queue.size) {
-                            return player.play();
-                        } else {
-                            return msg.channel.send({
-                                embeds: [new MessageEmbed()
-                                    .setDescription(`Added ${res.tracks[0].title} [${msg.author}]`)
-                                    .setColor(msg.guild?.me?.displayHexColor!)
-                                    .setTimestamp()]
-                            });
-                        }
-
-                    case "PLAYLIST_LOADED":
-                        player.queue.add(res.tracks)
-                        if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
-                        return msg.channel.send({
-                            embeds: [new MessageEmbed()
-                                .setDescription(`Added ${res.tracks.length} tracks from ${res.playlist?.name}`)
-                                .setColor(msg.guild?.me?.displayHexColor!)
-                                .setTimestamp()]
-                        });
                 }
-
             }
         }
     }
