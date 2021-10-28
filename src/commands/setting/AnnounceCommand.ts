@@ -22,7 +22,7 @@ export class AnnounceCommand extends Command {
 
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription('`Tracks Announcement` is now disabled')
+                    .setDescription('**Tracks Announcement** is now disabled')
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
@@ -32,7 +32,7 @@ export class AnnounceCommand extends Command {
 
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription('`Tracks Announcement` is now disabled')
+                    .setDescription('**Tracks Announcement** is now disabled')
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
@@ -42,7 +42,7 @@ export class AnnounceCommand extends Command {
 
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription('`Tracks Announcement` is now enabled')
+                    .setDescription('**Tracks Announcement** is now enabled')
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
