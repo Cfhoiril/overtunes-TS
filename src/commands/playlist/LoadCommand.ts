@@ -21,7 +21,6 @@ export class PlaylistCommand extends Command {
         });
 
         const data = await playlist.findOne({ User: msg.author.id, Playlist: argument.value });
-        let player = this.container.client.manager.get(msg.guild?.id!);
 
         if (!data) {
             msg.channel.send({
@@ -38,19 +37,21 @@ export class PlaylistCommand extends Command {
                 ]
             })
         } else {
+            let player = this.container.client.manager.get(msg.guild?.id!);
+
             if (!player) {
                 player = this.container.client.manager.create({
-                    guild: msg.guild?.id as string,
-                    voiceChannel: msg.channel?.id as string,
-                    textChannel: msg.channel.id as string,
+                    guild: msg.guildId as string,
+                    voiceChannel: msg.member?.voice.channelId as string,
+                    textChannel: msg.channelId as string,
                     volume: 75,
                     selfDeafen: false,
-                });
+                })
             }
 
             if (player.state !== "CONNECTED") {
                 player.connect();
-
+                player.set("autoplay", false);
             }
 
             const sg = data.Song
