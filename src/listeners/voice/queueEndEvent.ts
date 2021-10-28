@@ -73,8 +73,6 @@ export class queueEndEvent extends Listener {
                     player.destroy()
                 }
             }, 600000)
-        } else if (data.Stay === true) {
-            return;
         }
 
         // Special Channel Handler
