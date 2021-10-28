@@ -27,6 +27,7 @@ export class nodeConnectEvent extends Listener {
             await newNode?.send(players.voiceState);
             await newNode?.send(playOptions);
             players.node = newNode;
+            console.log(chalk.yellow(`🏹 ${players.guild}'s player moved to ${newNode.options.identifier}`))
         }
     }
 }
