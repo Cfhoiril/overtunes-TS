@@ -14,16 +14,15 @@ import chalk from "chalk";
 export class nodeConnectEvent extends Listener {
     async run(node: Node) {
         for (const players of [...this.container.client.manager.players.filter(x => x.node === node).values()]) {
-            const newNode = this.container.client.manager.nodes.get(this.container.client.manager.leastLoadNodes.first().options.identifier as string);
+            const newNode = this.container.client.manager.nodes.get(this.container.client.manager.leastLoadNodes.first()?.options.identifier);
 
             const playOptions = {
                 op: "play",
                 guildId: players.guild,
-                track: players.queue.current.track,
+                track: players.queue.current?.track,
                 startTime: players.position,
                 volume: players.volume,
             };
-
             await newNode.send(players.voiceState);
             await newNode.send(playOptions);
             players.node = newNode;
