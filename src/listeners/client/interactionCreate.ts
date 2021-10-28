@@ -199,12 +199,6 @@ export class interactionCreate extends Listener {
                             .setDescription("You must be in the same channel as Me")]
                     });
 
-                    if (!player.queue.current) return interaction.reply({
-                        embeds: [new MessageEmbed()
-                            .setColor("RED")
-                            .setDescription("There is no music playing")]
-                    });
-
                     !player.queueRepeat && !player.trackRepeat ? player.setQueueRepeat(true) : !player.trackRepeat ? player.setTrackRepeat(true) : player.setQueueRepeat(false).setTrackRepeat(false)
                     return interaction.reply({
                         embeds: [new MessageEmbed()
