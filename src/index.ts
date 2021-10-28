@@ -14,4 +14,3 @@ shardClient.on("shardCreate", (Shard: Shard) => {
 })
 
 shardClient.spawn().catch((error: Error) => console.log(chalk.redBright(`❌ Something error when spawning Shard: ${error.message}`)));
-
