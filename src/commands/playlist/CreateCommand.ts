@@ -26,8 +26,9 @@ export class PlaylistCommand extends Command {
             ]
         });
 
-        const data = await playlist.findOne({ User: msg.author.id });
-        if (data.map((c: any) => c.playlist).length > 9) return msg.channel.send({
+        const check = await playlist.find({ User: msg.author.id });
+        const data = await playlist.findOne({ User: msg.author.id, Playlist: argument.value });
+        if (check.map((c: any) => c.Playlist).length > 9) return msg.channel.send({
             embeds: [new MessageEmbed()
                 .setDescription('Maximum amount of playlist reached')
                 .setColor('RED')
