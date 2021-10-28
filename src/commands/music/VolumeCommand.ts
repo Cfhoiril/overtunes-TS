@@ -4,6 +4,7 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 @ApplyOptions<CommandOptions>({
     name: "volume",
+    aliases: ["vol"],
     requiredClientPermissions: ["CONNECT", "SPEAK"],
     preconditions: ["inVoice", "sameVoice", "havePlayer", "haveQueue", "isDjOnly", "isSpecialChannel"]
 })
