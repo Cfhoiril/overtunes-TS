@@ -100,10 +100,13 @@ export class nodeRawEvent extends Listener {
                     let months = date.format(new Date(), 'MMMM');
                     if (months.toLowerCase().includes("october")) embeds.setImage(`${imagesHalloween[Math.floor(Math.random() * imagesHalloween.length)]}`);
 
+                    let number = 0;
+                    let queue = player.queue.slice(0, 5).map(x => `${++number}. ${x.title} - ${x.isStream ? "LIVE" : toColonNotation(x.duration)}`).reverse().join("\n")
+
                     channel.messages.fetch(check.Message).then(x => {
                         try {
                             x.edit({
-                                content: null,
+                                content: `${player.queue.length > 0 ? `**Up Next:**\n${queue}` : "Join a voice channel then play something"}`,
                                 embeds: [embeds],
                                 components: [row]
                             })
