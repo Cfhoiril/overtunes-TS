@@ -148,7 +148,7 @@ export class messageCreate extends Listener {
                         if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
                         return msg.channel.send({
                             embeds: [new MessageEmbed()
-                                .setDescription(`Added ${res.tracks.length} songs from ${res.playlist?.name}`)
+                                .setDescription(`Added ${res.tracks.length} tracks from ${res.playlist?.name}`)
                                 .setColor(msg.guild?.me?.displayHexColor!)
                                 .setTimestamp()]
                         });
