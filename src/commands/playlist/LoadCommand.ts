@@ -56,7 +56,7 @@ export class PlaylistCommand extends Command {
 
             const sg = data.Song
 
-            sg.map(async (c: any) => {
+            sg.map((c: any) => {
                 player?.queue.add(TrackUtils.buildUnresolved({
                     title: c.Title,
                     author: c.Author,
