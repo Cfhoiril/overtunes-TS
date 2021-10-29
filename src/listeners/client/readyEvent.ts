@@ -92,7 +92,8 @@ export class readyEvent extends Listener {
             }
         })
 
-
+        require("./guildCreateEvent")(this.container.client).catch((e: Error) => { })
+        require("./guildDeleteEvent")(this.container.client).catch((e: Error) => { })
     }
 }
 

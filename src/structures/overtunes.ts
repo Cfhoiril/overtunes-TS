@@ -14,7 +14,15 @@ class Overtunes extends SapphireClient {
         super({
             fetchPrefix: async (msg: Message) => {
                 const guildData = await guild.findOne({ id: msg.guild?.id! });
-                return guildData?.prefix ?? config.prefix;
+                if (!guildData) {
+                    new guild({
+                        id: msg.guildId,
+                        prefix: config.prefix
+                    }).save()
+                    return config.prefix;
+                } else {
+                    return guildData.prefix;
+                }
             },
             allowedMentions: {
                 users: [],
