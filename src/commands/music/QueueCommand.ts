@@ -300,7 +300,7 @@ function generateQueueEmbed(queue: any) {
         const current = queue.slice(i, k);
         let j = i;
         k += 10
-        const info = current.map((track: any) => `${++j}. ${track.title} - ${track.isStream ? toColonNotation(track.duration) : "LIVE"}`).join("\n");
+        const info = current.map((track: any) => `${++j}. ${track.title} - ${track.isStream ? "LIVE" : toColonNotation(track.duration)}`).join("\n");
         emb.push(info);
     }
     return emb;
