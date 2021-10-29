@@ -30,11 +30,7 @@ export class MusicCommand extends Command {
             })
         }
 
-        player?.queue[position - 1];
-        player?.queue.splice(position - 1, 1);
-        player?.queue.splice(0, 0, player?.queue[position - 1]);
-
-        player?.stop();
+        player?.stop(position);
         msg.react('👌').catch(e => { })
     }
 }
