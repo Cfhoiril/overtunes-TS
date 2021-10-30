@@ -5,7 +5,8 @@ import { Manager } from "erela.js";
 import { join, resolve } from "path";
 // Config
 import * as config from "../config.json";
-import lavalink from "../config/lavalink";
+import privateLavalink from "../config/lavalink";
+import publicLavalink from "../config/lavalink2"
 import plugin from "../config/plugin";
 import guild from "../database/Manager/GuildManager"
 
@@ -55,7 +56,7 @@ class Overtunes extends SapphireClient {
     }
 
     public manager = new Manager({
-        nodes: lavalink,
+        nodes: privateLavalink,
         send: (id, payload) => {
             const guild = this.guilds.cache.get(id);
             if (guild) guild.shard.send(payload);
