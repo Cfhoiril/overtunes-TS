@@ -3,8 +3,8 @@ import { Args, Command, CommandOptions } from "@sapphire/framework";
 import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
 
 @ApplyOptions<CommandOptions>({
-    name: "jump",
-    aliases: ["skipto"],
+    name: "remove",
+    aliases: ["rmv", "rm"],
     requiredClientPermissions: ["CONNECT", "SPEAK"],
     preconditions: ["inVoice", "sameVoice", "havePlayer", "isDjOnly", "isSpecialChannel", "haveQueue"]
 })
