@@ -22,7 +22,7 @@ export class MusicCommand extends Command {
         const position = Number(argument.value);
         const player = this.container.client.manager.get(msg.guildId!);
 
-        if (!position || isNaN(position) || position < 0 || position > player?.queue?.size!) {
+        if (!position || isNaN(position) || position < 0) {
             return msg.channel.send({
                 embeds: [new MessageEmbed()
                     .setDescription('Please give a valid number')
@@ -30,16 +30,12 @@ export class MusicCommand extends Command {
             })
         }
 
-        const positions = position - 1;
+        if (position > player?.queue?.size!) return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setColor("RED")
+                .setDescription(`No tracks at number ${position}, Total tracks in this guild: **${player?.queue?.size}**`)]
+        });
 
-        if (positions > player?.queue?.size!) {
-            const number = (position + 1);
-            return msg.channel.send({
-                embeds: [new MessageEmbed()
-                    .setColor("RED")
-                    .setDescription(`No songs at number ${number}.\nTotal Songs: ${player?.queue?.size}`)]
-            });
-        }
 
         player?.queue.remove(position);
         msg.react('👌').catch(e => { })
