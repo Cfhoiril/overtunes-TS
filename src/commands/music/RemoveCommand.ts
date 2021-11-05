@@ -37,7 +37,7 @@ export class MusicCommand extends Command {
         });
 
 
-        player?.queue.remove(position);
+        player?.queue.remove(position - 1);
         msg.react('👌').catch(e => { })
     }
 }
