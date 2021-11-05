@@ -5,7 +5,7 @@ import playlist from "../../database/Manager/PlaylistManager";
 
 @ApplyOptions<CommandOptions>({
     name: "create",
-    preconditions: []
+    preconditions: ["premCommand"]
 })
 
 export class PlaylistCommand extends Command {
@@ -21,7 +21,14 @@ export class PlaylistCommand extends Command {
 
         if (argument.value.length > 15) return msg.channel.send({
             embeds: [new MessageEmbed()
-                .setDescription('Max playlist name need to be under 30')
+                .setDescription('Max playlist name need to be under 15')
+                .setColor('RED')
+            ]
+        });
+
+        if (!/^([a-zA-Z0-9 _-]+)$/.test(argument.value)) return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription('Playlist name must be number or letter')
                 .setColor('RED')
             ]
         });

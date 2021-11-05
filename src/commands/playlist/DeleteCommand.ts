@@ -5,7 +5,7 @@ import playlist from "../../database/Manager/PlaylistManager";
 
 @ApplyOptions<CommandOptions>({
     name: "delete",
-    preconditions: []
+    preconditions: ["premCommand"]
 })
 
 export class PlaylistCommand extends Command {
