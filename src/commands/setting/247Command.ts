@@ -8,7 +8,8 @@ import music from "../../database/Manager/MusicManager";
     aliases: ['247', '24/7', 'twentyfourseven'],
     requiredUserPermissions: ["MANAGE_GUILD"],
     cooldownDelay: 10000,
-    cooldownLimit: 2
+    cooldownLimit: 2,
+    preconditions: ["premCommand"]
 })
 
 export class TwentyfoursevenCommand extends Command {
