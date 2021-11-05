@@ -6,7 +6,7 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 @ApplyOptions<CommandOptions>({
     name: "pop",
     requiredClientPermissions: ["CONNECT", "SPEAK"],
-    preconditions: ["inVoice", "sameVoice", "havePlayer", "isDjOnly", "isSpecialChannel"]
+    preconditions: ["inVoice", "sameVoice", "havePlayer", "isDjOnly", "isSpecialChannel", "premCommand"]
 })
 
 export class MusicCommand extends Command {
