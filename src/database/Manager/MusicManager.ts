@@ -7,5 +7,6 @@ export = mongoose.model('setting', new mongoose.Schema({
     Dj: { type: Boolean, default: false },
     Message: { type: String, default: null },
     Channel: { type: String, default: null },
+    Volume: { type: Number, default: 75 },
     Locale: { type: String, default: "en" }
 }));
