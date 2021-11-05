@@ -91,9 +91,6 @@ export class readyEvent extends Listener {
                 }, this.container.client.ws.ping * 2);
             }
         })
-
-        require("./guildCreateEvent")(this.container.client).catch((e: Error) => { })
-        require("./guildDeleteEvent")(this.container.client).catch((e: Error) => { })
     }
 }
 
