@@ -1,9 +1,16 @@
 import setting from "../../database/Manager/MusicManager";
 import prefix from "../../database/Manager/GuildManager";
 import * as config from "../../config.json";
+import { ApplyOptions } from "@sapphire/decorators";
+import { Listener, ListenerOptions } from "@sapphire/framework";
+import { Guild } from "discord.js";
 
-module.exports = function (client: any) {
-    client.on("guildCreate", (guild: any) => {
+@ApplyOptions<ListenerOptions>({
+    name: "guildCreate"
+})
+
+export class rawEvent extends Listener {
+    async run(guild: Guild) {
         new setting({
             Guild: guild.id,
             Stay: false,
@@ -17,5 +24,5 @@ module.exports = function (client: any) {
         }).save()
 
         console.log(`🚄 Initiated database for ${guild.id}`)
-    })
+    }
 }
