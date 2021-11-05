@@ -11,16 +11,12 @@ import { Guild } from "discord.js";
 
 export class rawEvent extends Listener {
     async run(guild: Guild) {
-        prefix.findOne({ id: guild.id }, async (data: any) => {
-            if (data) data.delete()
-        })
 
-        setting.findOne({ Guild: guild.id }, async (data: any) => {
-            if (data) data.delete()
-        })
+        prefix.findOneAndDelete({ id: guild.id })
+        setting.findOneAndDelete({ Guild: guild.id })
 
         const player = this.container.client.manager.get(guild.id)
-        if (player) player.destroy();
+        if (player) player.destroy()
 
         console.log(`🧺 Deleted database for ${guild.id}`)
     }
