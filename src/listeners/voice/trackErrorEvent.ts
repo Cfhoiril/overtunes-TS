@@ -16,7 +16,7 @@ export class trackErrorEvent extends Listener {
         if (!player?.voiceChannel) player.destroy();
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
 
-        if (player.textChannel) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
+        if (player.get("Message")) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
         channel.send({
             embeds: [new MessageEmbed()
                 .setColor("RED")

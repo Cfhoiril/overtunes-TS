@@ -14,6 +14,8 @@ import Set from "../../database/Manager/MusicManager";
 
 export class playerDestroyEvent extends Listener {
     async run(player: Player) {
+        console.log(`🔇 ${this.container.client.guilds.cache.get(player.guild)?.name}'s player destroyed`)
+
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
         if (player.textChannel) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
 

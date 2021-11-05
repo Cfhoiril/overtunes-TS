@@ -57,5 +57,7 @@ export class trackStartEvent extends Listener {
                 }).catch(e => { })
             }
         }
+
+        console.log(`🎶 ${this.container.client.guilds.cache.get(player.guild)?.name} started playing ${track.title}`)
     }
 }

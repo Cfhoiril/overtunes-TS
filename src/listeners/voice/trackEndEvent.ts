@@ -17,7 +17,7 @@ export class trackEndEvent extends Listener {
         player.queue.previous = track;
 
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
-        if (player.textChannel) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
+        if (player.get("Message")) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
 
         const embed = new MessageEmbed()
             .setTitle('No Music currently playing')
