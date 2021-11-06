@@ -95,13 +95,13 @@ export class nodeRawEvent extends Listener {
                         .setDescription(`${player?.queue.current?.title} [${player?.queue.current?.requester}]`)
                         .setColor(this.container.client.guilds?.cache?.get(player?.guild)?.me?.displayHexColor!)
                         .setImage(`${images[Math.floor(Math.random() * images.length)]}`)
-                        .setFooter(`Duration: ${player?.queue.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration!)} | Total Songs: ${player?.queue?.size} | Volume: ${player?.volume}`)
+                        .setFooter(`Duration: ${player?.queue.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration! ?? 0)} | Total Songs: ${player?.queue?.size} | Volume: ${player?.volume}`)
 
                     let months = date.format(new Date(), 'MMMM');
                     if (months.toLowerCase().includes("october")) embeds.setImage(`${imagesHalloween[Math.floor(Math.random() * imagesHalloween.length)]}`);
 
                     let number = 0;
-                    let queue = player.queue.slice(0, 5).map(x => `${++number}. ${x.title} - ${x.isStream ? "LIVE" : toColonNotation(x.duration)}`).reverse().join("\n")
+                    let queue = player.queue.slice(0, 5).map(x => `**${++number}.** ${x.title} - ${x.isStream ? "LIVE" : toColonNotation(x.duration)}`).reverse().join("\n")
 
                     channel.messages.fetch(check.Message).then(x => {
                         try {
