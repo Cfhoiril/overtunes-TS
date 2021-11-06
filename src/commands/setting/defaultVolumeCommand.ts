@@ -22,6 +22,21 @@ export class AnnounceCommand extends Command {
         })
 
         const volume = Number(argument.value);
+
+        if (isNaN(volume)) return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription("Default volume must be a number")
+                .setColor("RED")
+            ]
+        })
+
+        if (volume > 300 || volume < 0) return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription("Default volume must be between **0 - 300**")
+                .setColor("RED")
+            ]
+        })
+
         const data = await music.findOne({ Guild: msg.guildId });
 
         if (!data) {
