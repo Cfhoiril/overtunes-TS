@@ -24,6 +24,12 @@ export class MusicCommand extends Command {
 
         const volume = Number(argument.value);
 
+        if (isNaN(volume)) return msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription("Volume must be a **Number**")
+                .setColor(msg.guild?.me?.displayHexColor!)]
+        })
+
         if (!volume || volume < 0 || volume > 300) {
             return msg.channel.send({
                 embeds: [new MessageEmbed()
