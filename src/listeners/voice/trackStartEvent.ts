@@ -19,6 +19,9 @@ export class trackStartEvent extends Listener {
         if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_VOICE")
             this.container.client.guilds.cache.get(player.guild)?.me?.voice.setDeaf(true).catch(e => { });
 
+        // @ts-expect-error
+        if (player.timeout) clearTimeout(player.timeout);
+
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
         let special = await Set.findOne({ Guild: player.guild });
 
