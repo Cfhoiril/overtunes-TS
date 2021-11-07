@@ -29,7 +29,7 @@ export class PlaylistCommand extends Command {
                     .setColor('RED')
                 ]
             })
-        } if (!data.Song.length) {
+        } else if (!data.Song.length) {
             msg.channel.send({
                 embeds: [new MessageEmbed()
                     .setDescription('That playlist empty')
