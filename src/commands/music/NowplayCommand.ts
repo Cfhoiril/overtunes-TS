@@ -24,7 +24,7 @@ export class MusicCommand extends Command {
             .setTitle('Current song')
             .setDescription(`${player?.queue?.current?.title} [${player?.queue?.current?.requester}]`)
             .setColor(msg.guild?.me?.displayHexColor!)
-            .setFooter(`${toColonNotation(player?.position)} ${progress(bar, current, total, slider, size)[0]} ${player?.queue?.current?.isStream ? 'LIVE' : toColonNotation(player?.queue?.current?.duration ?? 0)}`)
+            .setFooter(`${toColonNotation(player?.position)} ${progress(bar, current, total, slider, size)[0]} ${player?.queue?.current?.isStream ? 'LIVE' : toColonNotation(player?.queue?.current?.duration ?? 1000)}`)
         return msg.channel.send({ embeds: [now] });
     }
 }
