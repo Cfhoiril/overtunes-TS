@@ -60,16 +60,30 @@ export class queueEndEvent extends Listener {
 
         const data = await Set.findOne({ Guild: player.guild });
         if (!data) {
-            setTimeout(() => {
+            // @ts-expect-error
+            player.timeout = setTimeout(() => {
                 if (!player.queue.current) {
-
+                    const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
+                    channel.send({
+                        embeds: [new MessageEmbed()
+                            .setDescription('I left the voice channel because I was inactive for too long.If you are satisfied with our service, please vote for us by [clicking here](https://top.gg/bot/873101608467185684/vote/)')
+                            .setColor(this.container.client.guilds.cache.get(player.guild)?.me?.displayHexColor!)
+                        ]
+                    })
                     player.destroy()
                 }
             }, 600000)
         } else if (data.Stay === false) {
-            setTimeout(() => {
+            // @ts-expect-error
+            player.timeout = setTimeout(() => {
                 if (!player.queue.current) {
-
+                    const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
+                    channel.send({
+                        embeds: [new MessageEmbed()
+                            .setDescription('I left the voice channel because I was inactive for too long.If you are satisfied with our service, please vote for us by [clicking here](https://top.gg/bot/873101608467185684/vote/)')
+                            .setColor(this.container.client.guilds.cache.get(player.guild)?.me?.displayHexColor!)
+                        ]
+                    })
                     player.destroy()
                 }
             }, 600000)
