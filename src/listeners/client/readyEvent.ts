@@ -95,27 +95,27 @@ export class readyEvent extends Listener {
         })
 
 
-        const app = express()
-        const port = process.env.PORT || 3333;
-        const botId = this.container.client.user?.id;
-        const totalGuild = this.container.client.guilds.cache.size;
-        const totalChannel = this.container.client.channels.cache.size;
-        const totalMember = this.container.client.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
-        const totalVoice = this.container.client.manager.players.size;
+        // const app = express()
+        // const port = process.env.PORT || 3333;
+        // const botId = this.container.client.user?.id;
+        // const totalGuild = this.container.client.guilds.cache.size;
+        // const totalChannel = this.container.client.channels.cache.size;
+        // const totalMember = this.container.client.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
+        // const totalVoice = this.container.client.manager.players.size;
 
-        setTimeout(() => {
-            app.get('/data', function (req: any, res: any) {
-                res.json({
-                    botId: botId,
-                    guild: totalGuild,
-                    channel: totalChannel,
-                    members: totalMember,
-                    voices: totalVoice
-                });
-            })
-        }, 600000);
+        // setTimeout(() => {
+        //     app.get('/data', function (req: any, res: any) {
+        //         res.json({
+        //             botId: botId,
+        //             guild: totalGuild,
+        //             channel: totalChannel,
+        //             members: totalMember,
+        //             voices: totalVoice
+        //         });
+        //     })
+        // }, 600000);
 
-        app.listen(port);
+        // app.listen(port);
     }
 }
 
