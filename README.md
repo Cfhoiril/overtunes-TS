@@ -4,5 +4,5 @@
   - Please support our project by give the project star or contributing
 
 # FAQ
-  - Why don't you provide config config for this bot?
+  - Why don't you provide config for this bot?
     - It has been said above, that we do not provide any support
