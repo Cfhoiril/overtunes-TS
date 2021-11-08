@@ -21,7 +21,7 @@ export class MusicCommand extends Command {
         if (!argument.success) return msg.channel.send({
             embeds: [new MessageEmbed()
                 .setColor('RED')
-                .setDescription(`To play song u need specify the track title, or you can try **${guildPrefix.prefix ?? config.prefix}play everything sucks**`)]
+                .setDescription(`To play a song you need to specify the track title, or you can try **${guildPrefix.prefix ?? config.prefix}play everything sucks**`)]
         });
 
         if (!player) {
@@ -52,7 +52,7 @@ export class MusicCommand extends Command {
             if (res.loadType === 'LOAD_FAILED') {
                 return msg.channel.send({
                     embeds: [new MessageEmbed()
-                        .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
+                        .setAuthor("Something went wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
                         .setDescription(`\`\`\`${res.exception?.message!}\`\`\``)
                         .setColor("RED")
                     ]
@@ -62,7 +62,7 @@ export class MusicCommand extends Command {
         } catch (err) {
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
+                    .setAuthor("Something went wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
                     .setDescription(`\`\`\`${err}\`\`\``)
                     .setColor("RED")
                 ]
@@ -73,7 +73,7 @@ export class MusicCommand extends Command {
             case "NO_MATCHES":
                 return msg.channel.send({
                     embeds: [new MessageEmbed()
-                        .setDescription("There were no results found")
+                        .setDescription("No results matching the query found.")
                         .setColor("RED")
                     ]
                 });
