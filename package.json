@@ -33,6 +33,7 @@
     "erela.js": "github:Stevanvincent/erela.js-resume",
     "erela.js-deezer": "^1.0.7",
     "erela.js-filter": "^0.2.3",
+    "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "genius-lyrics": "^4.3.4",
     "genius-lyrics-api": "^3.2.0",

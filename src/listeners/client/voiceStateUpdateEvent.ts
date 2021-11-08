@@ -20,8 +20,10 @@ export class rawEvent extends Listener {
 
         if (oldState && oldState.channel && !voiceChannel?.members?.filter(m => !m.user.bot).size && player.voiceChannel === oldState.channelId) {
             // @ts-expect-error
+            if (player.timeout) clearTimeout(player.timeout);
+            // @ts-expect-error
             player.timeout = setTimeout(() => {
-                if (!player.queue.current) {
+                if (oldState && oldState.channel && !voiceChannel?.members?.filter(m => !m.user.bot).size && player.voiceChannel === oldState.channelId) {
                     const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
                     channel.send({
                         embeds: [new MessageEmbed()

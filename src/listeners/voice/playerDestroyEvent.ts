@@ -17,7 +17,9 @@ export class playerDestroyEvent extends Listener {
         console.log(`🔇 ${this.container.client.guilds.cache.get(player.guild)?.name}'s player destroyed`)
 
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
-        if (player.textChannel) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
+        if (player.get("Message")) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
+        // @ts-expect-error
+        if (player.timeout) clearTimeout(player.timeout);
 
         const lastEmbed = new MessageEmbed()
             .setTitle('No Music currently playing')

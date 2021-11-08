@@ -61,6 +61,8 @@ export class queueEndEvent extends Listener {
         const data = await Set.findOne({ Guild: player.guild });
         if (!data) {
             // @ts-expect-error
+            if (player.timeout) clearTimeout(player.timeout);
+            // @ts-expect-error
             player.timeout = setTimeout(() => {
                 if (!player.queue.current) {
                     const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
@@ -79,6 +81,8 @@ export class queueEndEvent extends Listener {
                 }
             }, 600000)
         } else if (data.Stay === false) {
+            // @ts-expect-error
+            if (player.timeout) clearTimeout(player.timeout);
             // @ts-expect-error
             player.timeout = setTimeout(() => {
                 if (!player.queue.current) {
