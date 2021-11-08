@@ -70,7 +70,12 @@ export class queueEndEvent extends Listener {
                             .setColor(this.container.client.guilds.cache.get(player.guild)?.me?.displayHexColor!)
                         ]
                     })
+                    // @ts-expect-error
+                    clearTimeout(player.timeout);
                     player.destroy()
+                } else {
+                    // @ts-expect-error
+                    if (player.timeout) clearTimeout(player.timeout);
                 }
             }, 600000)
         } else if (data.Stay === false) {
@@ -84,7 +89,12 @@ export class queueEndEvent extends Listener {
                             .setColor(this.container.client.guilds.cache.get(player.guild)?.me?.displayHexColor!)
                         ]
                     })
+                    // @ts-expect-error
+                    clearTimeout(player.timeout);
                     player.destroy()
+                } else {
+                    // @ts-expect-error
+                    if (player.timeout) clearTimeout(player.timeout);
                 }
             }, 600000)
         }
