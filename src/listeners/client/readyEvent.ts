@@ -5,6 +5,7 @@ import * as config from "../../config.json";
 import mongoose, { connect } from "mongoose";
 import { Node, Player } from "erela.js";
 import stay from "../../database/Manager/MusicManager";
+import { TextBasedChannelTypes, VoiceBasedChannelTypes } from "@sapphire/discord.js-utilities";
 // @ts-ignore
 import express from "express";
 
@@ -35,6 +36,10 @@ export class readyEvent extends Listener {
         // Node disconnect handle to move player
         this.container.client.manager.on("nodeDisconnect", async (node: Node) => {
             for (const players of [...this.container.client.manager.players.filter(x => x.node === node).values()]) {
+                if (players.state == "DESTROYING") players.destroy();
+                const channel = this.container.client.channels?.cache?.get(players?.textChannel!) as TextBasedChannelTypes
+                if (players.get("Message")) channel?.messages?.fetch(players.get("Message")).then((x: any) => x.delete()).catch((e: any) => { });
+
                 const newNode = this.container.client.manager.nodes.get(this.container.client?.manager?.leastLoadNodes.first()?.options.identifier as string);
 
                 const playOptions = {
@@ -93,29 +98,6 @@ export class readyEvent extends Listener {
                 }, this.container.client.ws.ping * 2);
             }
         })
-
-
-        // const app = express()
-        // const port = process.env.PORT || 3333;
-        // const botId = this.container.client.user?.id;
-        // const totalGuild = this.container.client.guilds.cache.size;
-        // const totalChannel = this.container.client.channels.cache.size;
-        // const totalMember = this.container.client.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
-        // const totalVoice = this.container.client.manager.players.size;
-
-        // setTimeout(() => {
-        //     app.get('/data', function (req: any, res: any) {
-        //         res.json({
-        //             botId: botId,
-        //             guild: totalGuild,
-        //             channel: totalChannel,
-        //             members: totalMember,
-        //             voices: totalVoice
-        //         });
-        //     })
-        // }, 600000);
-
-        // app.listen(port);
     }
 }
 
