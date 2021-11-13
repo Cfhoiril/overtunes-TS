@@ -36,7 +36,7 @@ export class readyEvent extends Listener {
         // Node disconnect handle to move player
         this.container.client.manager.on("nodeDisconnect", async (node: Node) => {
             for (const players of [...this.container.client.manager.players.filter(x => x.node === node).values()]) {
-                if (players.state == "DESTROYING") players.destroy();
+                if (players.state == "DESTROYING") return players.destroy();
                 const channel = this.container.client.channels?.cache?.get(players?.textChannel!) as TextBasedChannelTypes
                 if (players.get("Message")) channel?.messages?.fetch(players.get("Message")).then((x: any) => x.delete()).catch((e: any) => { });
 
