@@ -69,6 +69,13 @@ export class messageCreate extends Listener {
                     }
 
                     let player = this.container.client.manager.get(msg.guildId!);
+                    if (player && msg.member.voice.channel !== msg.guild?.me?.voice?.channel) return msg.channel.send({
+                        embeds: [new MessageEmbed()
+                            .setColor("RED")
+                            .setDescription(`You must be in the same channel as Me`)]
+                    });
+
+
                     if (!player) {
                         player = this.container.client.manager.create({
                             guild: msg.guildId as string,
