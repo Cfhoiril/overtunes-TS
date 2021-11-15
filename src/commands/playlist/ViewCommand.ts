@@ -63,11 +63,17 @@ export class PlaylistCommand extends Command {
                 .setCustomId('last')
                 .setLabel('Last')
 
+            let deleteButton = new MessageButton()
+                .setStyle('DANGER')
+                .setCustomId('delete')
+                .setLabel('❎')
+
             let row = new MessageActionRow()
                 .addComponents(first)
                 .addComponents(back)
                 .addComponents(next)
                 .addComponents(last)
+                .addComponents(deleteButton)
 
             const b = await msg.channel.send({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${emb[currentPage]}\`\`\``, components: [row] });
 
@@ -75,47 +81,33 @@ export class PlaylistCommand extends Command {
             const collector = b.createMessageComponentCollector({ filter });
 
             collector.on('collect', async i => {
+                await i.deferUpdate();
                 if (i.customId === 'next') {
-                    await i.deferUpdate();
-
                     if (currentPage < emb.length - 1) {
                         currentPage++;
-                        let kk = currentPage
-                        const embs = generateQueueEmbed(data.Song)
-                        i.editReply({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${embs[kk]}\`\`\``, components: [row] });
-
+                        b.edit({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${emb[currentPage]}\`\`\``, components: [row] });
                     }
                 }
 
                 if (i.customId === 'back') {
-                    await i.deferUpdate();
-
                     if (currentPage !== 0) {
                         --currentPage;
-                        let kk = currentPage
-                        const embs = generateQueueEmbed(data.Song)
-                        i.editReply({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${embs[kk]}\`\`\``, components: [row] });
-
+                        b.edit({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${emb[currentPage]}\`\`\``, components: [row] });
                     }
                 }
 
                 if (i.customId === 'last') {
-                    await i.deferUpdate();
-                    const embs = generateQueueEmbed(data.Song)
-                    currentPage = embs.length - 1
-                    let kk = currentPage
-
-                    i.editReply({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${embs[embs.length - 1]}\`\`\``, components: [row] });
-
+                    currentPage = emb.length - 1
+                    b.edit({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${emb[emb.length - 1]}\`\`\``, components: [row] });
                 }
 
                 if (i.customId === 'first') {
-                    await i.deferUpdate();
-                    const embs = generateQueueEmbed(data.Song)
-                    currentPage = embs.length - 1
-                    let kk = currentPage
+                    currentPage = 0
+                    b.edit({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${emb[0]}\`\`\``, components: [row] });
+                }
 
-                    i.editReply({ content: `Playlist Name: \`${data.Playlist}\`\n\`\`\`js\n${embs[0]}\`\`\``, components: [row] });
+                if (i.customId === 'delete') {
+                    b.delete()
                 }
             })
         }
