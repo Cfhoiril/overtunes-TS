@@ -2,7 +2,10 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { Args, Command, CommandOptions } from "@sapphire/framework";
 import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
 // @ts-expect-error
-import ms from "ms";
+import { toMilliseconds, toColonNotation } from "colon-notation";
+
+import * as config from "../../config.json";
+import prefix from "../../database/Manager/GuildManager";
 
 @ApplyOptions<CommandOptions>({
     name: "seek",
@@ -14,15 +17,16 @@ import ms from "ms";
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
         const argument = await args.restResult("string");
+        const player = this.container.client.manager.get(msg.guildId!);
+        let guildPrefix = await prefix.findOne({ id: msg.guild?.id! })
 
         if (!argument.success) return msg.channel.send({
             embeds: [new MessageEmbed()
-                .setDescription('Please give a valid duration')
+                .setDescription(`Please give a valid duration for example **${guildPrefix.prefix ?? config.prefix}seek ${toColonNotation(player?.queue?.current?.duration! / 2)}**`)
                 .setColor('RED')]
         })
 
-        const player = this.container.client.manager.get(msg.guildId!);
-        const time = ms(argument.value);
+        const time = toMilliseconds(argument.value);
         const position = player?.position;
         const duration = player?.queue.current?.duration;
 
@@ -38,7 +42,7 @@ export class MusicCommand extends Command {
             return msg.channel.send({
                 embeds: [new MessageEmbed()
                     .setColor("RED")
-                    .setDescription('Invalid track duration')]
+                    .setDescription(`Invalid track duration, current queue duration is **${toColonNotation(player?.queue.current?.duration)}**`)]
             });
         }
     }
