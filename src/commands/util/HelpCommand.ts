@@ -16,7 +16,7 @@ export class HelpCommand extends Command {
         let data = await prefix.findOne({ id: msg.guild?.id! });
 
         let embed = new MessageEmbed()
-            .setAuthor(this.container.client.user?.username as string + ' Help menu', this.container.client.user?.displayAvatarURL(), "https://overtunes.netlify.app/docs/get-started/inviting-the-bot/")
+            .setAuthor(this.container.client.user?.username as string + ' Help menu', this.container.client.user?.displayAvatarURL(), "https://discord.com/oauth2/authorize?client_id=873101608467185684&scope=bot&permissions=4332047432&scope=applications.commands%20bot")
             .setColor(msg.guild?.me?.displayHexColor!)
             .setFooter(`Click button bellow to get more info`)
 
