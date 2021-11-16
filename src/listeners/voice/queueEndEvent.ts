@@ -21,7 +21,7 @@ export class queueEndEvent extends Listener {
 
         const embed = new MessageEmbed()
             .setTitle('No Music currently playing')
-            .setDescription("[Commands](https://overtunes.netlify.app/docs/basic-use/commands) | [Invite](https://overtunes.netlify.app/docs/get-started/inviting-the-bot) | [Support](https://discord.gg/hM8U8cHtwu)")
+            .setDescription("[Commands](https://overtunes.me/commands) | [Invite](https://discord.com/oauth2/authorize?client_id=873101608467185684&scope=bot&permissions=4332047432&scope=applications.commands%20bot) | [Support](https://discord.gg/hM8U8cHtwu)")
             .setColor(this.container.client.guilds?.cache?.get(player?.guild)?.me?.displayHexColor!)
             .setImage('https://cdn.discordapp.com/attachments/843462619158675487/890162871915393024/386720.jpeg')
 

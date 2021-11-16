@@ -27,7 +27,7 @@ export class StatsCommand extends Command {
         }
 
         let embed = new MessageEmbed()
-            .setAuthor(this.container.client.user?.username as string, undefined, "https://overtunes.netlify.app/docs/get-started/inviting-the-bot/")
+            .setAuthor(this.container.client.user?.username as string, undefined, "https://discord.com/oauth2/authorize?client_id=873101608467185684&scope=bot&permissions=4332047432&scope=applications.commands%20bot")
             .setColor(msg.guild?.me?.displayHexColor!)
             .setTimestamp(this.container.client.readyTimestamp)
             .setFooter("Last update")

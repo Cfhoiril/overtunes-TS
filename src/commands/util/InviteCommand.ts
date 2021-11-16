@@ -11,7 +11,7 @@ export class PingCommand extends Command {
         let button = new MessageButton()
             .setStyle('LINK')
             .setLabel('Invite')
-            .setURL('https://overtunes.netlify.app/docs/get-started/inviting-the-bot/')
+            .setURL('https://discord.com/oauth2/authorize?client_id=873101608467185684&scope=bot&permissions=4332047432&scope=applications.commands%20bot')
 
         const ab = new MessageActionRow()
             .addComponents(button)

@@ -37,26 +37,8 @@ export class HelpCommand extends Command {
                 .addComponents(
                     new MessageButton()
                         .setStyle('LINK')
-                        .setURL('https://overtunes.netlify.app/docs/get-started/playing-music')
-                        .setLabel('Get Started')
-                )
-                .addComponents(
-                    new MessageButton()
-                        .setStyle('LINK')
                         .setLabel('Commands')
-                        .setURL('https://overtunes.netlify.app/docs/basic-use/commands')
-                )
-                .addComponents(
-                    new MessageButton()
-                        .setStyle('LINK')
-                        .setLabel('FAQ')
-                        .setURL('https://overtunes.netlify.app/docs/basic-use/faq')
-                )
-                .addComponents(
-                    new MessageButton()
-                        .setStyle('LINK')
-                        .setLabel('Filters')
-                        .setURL('https://overtunes.netlify.app/docs/basic-use/filters')
+                        .setURL('https://overtunes.me/commands')
                 )
             ]
         })

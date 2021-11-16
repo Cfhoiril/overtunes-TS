@@ -68,7 +68,7 @@ export class SetupCommand extends Command {
 
             msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription(`Music request channel has been created, Channel <#${x.id}>.\n\nMy [commands](https://overtunes.netlify.app/docs/basic-use/commands/) will only work in <#${x.id}> from now on.`)
+                    .setDescription(`Music request channel has been created, Channel <#${x.id}>.\n\nMy [commands](https://overtunes.me/commands) will only work in <#${x.id}> from now on.`)
                     .setColor(msg.guild?.me?.displayHexColor!)
                 ]
             })
