@@ -27,6 +27,23 @@ export class readyEvent extends Listener {
             return process.exit(1)
         });
 
+        const server = this.container.client.guilds.cache.size
+
+        // @ts-ignore
+        if (config.topgg) {
+            setInterval(function () {
+                const { Api } = require("@top-gg/sdk");
+                // @ts-ignore
+                const api = new Api(config.topgg);
+
+                api.postStats({
+                    serverCount: server,
+                    shardCount: 1
+                })
+            }, 600000)
+        }
+        ;
+
         process.on('unhandledRejection', error => { });
         process.on('uncaughtException', error => { }); //well this made for client not crashing when error 
 
