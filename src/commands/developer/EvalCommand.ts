@@ -12,6 +12,7 @@ import util from "util";
     preconditions: ["ownerOnly"],
     aliases: ["ev"],
     requiredClientPermissions: ["SEND_MESSAGES"],
+    flags: true
 })
 export class EvalCommand extends Command {
     async messageRun(message: Message, args: Args) {
@@ -20,22 +21,44 @@ export class EvalCommand extends Command {
         if (!userArgument.success) return;
         const code = userArgument.value
 
-        try {
-            let { evaled } = await this.parseEval(eval(code)) /* eslint-disable-line */
-            if (typeof evaled !== "string") evaled = util.inspect(evaled);
+        if (args.getFlags("haste", "h")) {
+            try {
+                let { evaled } = await this.parseEval(eval(code))
+                if (typeof evaled !== "string") evaled = util.inspect(evaled);
 
-            if (evaled.length > 1024) {
                 const { key } = await petitio("https://haste-server.stevanvincent.repl.co/documents", "POST").body(evaled).json();
                 await msg.channel.send(`https://haste-server.stevanvincent.repl.co/${key}.js`);
-            } else {
+
+            } catch (e) {
+                await msg.channel.send({
+                    content: codeBlock("js", e as string)
+                });
+            }
+        } else if (args.getFlags("async", "a")) {
+            try {
+                let { evaled } = await this.parseEval(eval(`(async() => {${code}})`))
+                if (typeof evaled !== "string") evaled = util.inspect(evaled);
+
+                const { key } = await petitio("https://haste-server.stevanvincent.repl.co/documents", "POST").body(evaled).json();
+                await msg.channel.send(`https://haste-server.stevanvincent.repl.co/${key}.js`);
+
+            } catch (e) {
+                await msg.channel.send({
+                    content: codeBlock("js", e as string)
+                });
+            }
+        } else {
+            try {
+                let { evaled } = await this.parseEval(eval(code)) /* eslint-disable-line */
+                if (typeof evaled !== "string") evaled = util.inspect(evaled);
                 await msg.channel.send({
                     content: codeBlock("js", evaled)
                 });
+            } catch (e) {
+                await msg.channel.send({
+                    content: codeBlock("js", e as string)
+                });
             }
-        } catch (e) {
-            await msg.channel.send({
-                content: codeBlock("js", e as string)
-            });
         }
     }
 
