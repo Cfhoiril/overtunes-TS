@@ -13,7 +13,7 @@ export class rawEvent extends Listener {
     async run(oldState: any, newState: any) {
         const player = await this.container.client.manager.get(oldState.guild.id);
         if (!player) return;
-        const voiceChannel = this.container.client.channels?.cache?.get(player.voiceChannel!) as VoiceChannel
+        const voiceChannel = this.container.client.channels?.cache?.get(player.voiceChannel!) as VoiceBasedChannelTypes
 
         const prem = await channel.findOne({ Guild: oldState.guild.id });
         if (prem.Stay === true) return;
@@ -23,7 +23,7 @@ export class rawEvent extends Listener {
             if (player.timeout) clearTimeout(player.timeout);
             // @ts-expect-error
             player.timeout = setTimeout(() => {
-                if (oldState && oldState.channel && !voiceChannel?.members?.filter(m => !m.user.bot).size && player.voiceChannel === oldState.channelId) {
+                if (oldState && oldState.channel && !voiceChannel.members.filter(m => !m.user.bot).size && player.voiceChannel === oldState.channelId) {
                     const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
                     channel.send({
                         embeds: [new MessageEmbed()
