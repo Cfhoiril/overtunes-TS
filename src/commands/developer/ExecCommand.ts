@@ -15,8 +15,9 @@ import petitio from "petitio";
 export class ExecCommand extends Command {
     async messageRun(msg: Message, args: Args) {
         const argument = await args.restResult("string");
+        if (!argument.success) return;
 
-        if (args.getFlags("haste", "h")) {
+        if (args.getFlags("haste")) {
             try {
                 const execute = (command: string) => {
                     exec.exec(command, async (err, stdout, stderr) => {
