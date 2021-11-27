@@ -41,8 +41,7 @@ export class readyEvent extends Listener {
                     shardCount: 1
                 })
             }, 600000)
-        }
-        ;
+        };
 
         process.on('unhandledRejection', error => { });
         process.on('uncaughtException', error => { }); //well this made for client not crashing when error 
@@ -115,6 +114,29 @@ export class readyEvent extends Listener {
                 }, this.container.client.ws.ping * 2);
             }
         })
+
+        // const app = express()
+        // const port = process.env.PORT || 3000;
+
+        // setTimeout(() => {
+        //     const botId = this.container.client.user?.id;
+        //     const totalGuild = this.container.client.guilds.cache.size;
+        //     const totalChannel = this.container.client.channels.cache.size;
+        //     const totalMember = this.container.client.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
+        //     const totalVoice = this.container.client.manager.players.size;
+
+        //     app.get('/data', function (req: any, res: any) {
+        //         res.send({
+        //             botId: botId,
+        //             guild: totalGuild,
+        //             channel: totalChannel,
+        //             members: totalMember,
+        //             voices: totalVoice
+        //         });
+        //     })
+        // }, 1000);
+
+        // app.listen(port);
     }
 }
 

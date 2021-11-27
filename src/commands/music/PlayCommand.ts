@@ -27,7 +27,7 @@ export class MusicCommand extends Command {
         if (!player) {
             player = this.container.client.manager.create({
                 guild: msg.guildId as string,
-                voiceChannel: msg.member?.voice.channelId as string,
+                voiceChannel: msg.member?.voice.channel?.id as string,
                 textChannel: msg.channelId as string,
                 volume: 75,
                 selfDeafen: false,
