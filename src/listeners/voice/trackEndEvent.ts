@@ -17,8 +17,8 @@ export class trackEndEvent extends Listener {
         player.queue.previous = track;
 
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
-        if (player.get("Message")) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
-
+        // @ts-expect-error
+        if (player.get("Message")) player.get("Message").delete().catch(() => { });
         const embed = new MessageEmbed()
             .setTitle('No Music currently playing')
             .setDescription("[Commands](https://overtunes.me/commands) | [Invite](https://discord.com/oauth2/authorize?client_id=873101608467185684&scope=bot&permissions=4332047432&scope=applications.commands%20bot) | [Support](https://discord.gg/hM8U8cHtwu)")

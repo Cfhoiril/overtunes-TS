@@ -53,7 +53,7 @@ export class trackStartEvent extends Listener {
                     .setTimestamp()
 
                 channel?.send({ embeds: [a] }).then(msgs => {
-                    player.set("Message", msgs.id)
+                    player.set("Message", msgs)
                 }).catch(e => { })
             }
         }

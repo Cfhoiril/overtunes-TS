@@ -17,7 +17,8 @@ export class playerDestroyEvent extends Listener {
         console.log(`🔇 ${this.container.client.guilds.cache.get(player.guild)?.name}'s player destroyed`)
 
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
-        if (player.get("Message")) channel.messages.fetch(player.get("Message")).then(x => x.delete()).catch(e => { });
+        // @ts-expect-error
+        if (player.get("Message")) player.get("Message").delete().catch(() => { });
         // @ts-expect-error
         if (player.timeout) clearTimeout(player.timeout);
 
