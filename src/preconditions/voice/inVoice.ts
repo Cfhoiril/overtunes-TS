@@ -14,7 +14,8 @@ export abstract class inVoice extends Precondition {
     }
 
     private shouldRun(msg: Message) {
-        return Boolean(msg.member?.voice.channel?.id);
+        if (!msg.member?.voice.channel?.id || !msg.guild?.id) return false;
+        return true;
     }
 }
 
