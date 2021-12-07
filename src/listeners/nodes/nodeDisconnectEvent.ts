@@ -16,7 +16,8 @@ export class nodeConnectEvent extends Listener {
         for (const players of [...this.container.client.manager.players.filter(x => x.node === node).values()]) {
             if (players.state == "DESTROYING") return players.destroy();
             const channel = this.container.client.channels?.cache?.get(players?.textChannel!) as TextBasedChannelTypes
-            if (players.get("Message")) channel?.messages?.fetch(players.get("Message")).then((x: any) => x.delete()).catch((e: any) => { });
+            // @ts-expect-error
+            if (players.get("Message")) players.get("Message").delete().catch(() => { });
 
             const newNode = this.container.client.manager.nodes.get(this.container.client?.manager?.leastLoadNodes.first()?.options.identifier as string);
 
