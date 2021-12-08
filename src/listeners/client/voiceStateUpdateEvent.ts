@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Listener, ListenerOptions } from "@sapphire/framework";
-import { VoiceChannel, MessageEmbed } from "discord.js";
+import { VoiceChannel, MessageEmbed, VoiceState } from "discord.js";
 import { TextBasedChannelTypes, VoiceBasedChannelTypes } from "@sapphire/discord.js-utilities";
 import { VoicePacket } from "erela.js";
 import channel from "../../database/Manager/MusicManager";
@@ -10,7 +10,7 @@ import channel from "../../database/Manager/MusicManager";
 })
 
 export class rawEvent extends Listener {
-    async run(oldState: any, newState: any) {
+    async run(oldState: VoiceState, newState: VoiceState) {
         const player = await this.container.client.manager.get(oldState.guild.id);
         if (!player) return;
         const voiceChannel = this.container.client.channels?.cache?.get(player.voiceChannel!) as VoiceBasedChannelTypes

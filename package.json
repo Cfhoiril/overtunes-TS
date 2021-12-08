@@ -4,7 +4,7 @@
   "description": "Best music bot for Discord. Supports Spotify, Soundcloud, Deezer and more...",
   "main": "dist/index.js",
   "scripts": {
-    "test": "npm install -g npm@8.1.4 && tsc && node dist",
+    "test": "tsc && node dist",
     "start": "node dist",
     "build": "tsc"
   },
@@ -25,12 +25,12 @@
     "@sapphire/framework": "^2.1.3",
     "@top-gg/sdk": "^3.1.2",
     "better-erela.js-spotify": "^1.1.3",
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.2",
     "child_process": "^1.0.2",
     "colon-notation": "^1.2.1",
     "date-and-time": "^2.0.1",
     "discord.js": "^13.2.0",
-    "erela.js": "github:Stevanvincent/erela.js-resume",
+    "erela.js": "github:Vann-Dev/erela.js-resume",
     "erela.js-deezer": "^1.0.7",
     "erela.js-filter": "github:overtunes-bot/erela.js-filter-fork",
     "express": "^4.17.1",
