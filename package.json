@@ -33,6 +33,7 @@
     "erela.js": "github:Vann-Dev/erela.js-resume",
     "erela.js-deezer": "^1.0.7",
     "erela.js-filter": "github:overtunes-bot/erela.js-filter-fork",
+    "erela.js-spotify": "^1.2.0",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "genius-lyrics": "^4.3.4",
@@ -48,7 +49,7 @@
     "util": "^0.12.4"
   },
   "devDependencies": {
-    "@types/node": "16.11.15",
+    "@types/node": "^16.11.15",
     "typescript": "4.5.4"
   },
   "engines": {
