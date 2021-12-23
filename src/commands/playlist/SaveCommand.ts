@@ -23,6 +23,14 @@ export class PlaylistCommand extends Command {
         const data = await playlist.findOne({ User: msg.author.id, Playlist: argument.value });
 
         if (data) {
+            // ! check if song has reached 100
+            if (data.Song.length >= 100) return msg.channel.send({
+                embeds: [new MessageEmbed()
+                    .setDescription('Max tracks on this playlist reached')
+                    .setColor('RED')
+                ]
+            });
+
             data.Song.push({ Title: player?.queue?.current?.title, Author: player?.queue?.current?.author, Duration: player?.queue?.current?.duration });
             data.save()
             return msg.channel.send({
