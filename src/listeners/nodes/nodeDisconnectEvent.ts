@@ -20,6 +20,7 @@ export class nodeConnectEvent extends Listener {
             if (players.get("Message")) players.get("Message").delete().catch(() => { });
 
             const newNode = this.container.client.manager.nodes.get(this.container.client?.manager?.leastLoadNodes.first()?.options.identifier as string);
+            if (!newNode) return players.destroy();
 
             const playOptions = {
                 op: "play",
