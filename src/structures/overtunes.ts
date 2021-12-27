@@ -3,6 +3,8 @@ import { SapphireClient } from "@sapphire/framework";
 import { Intents, Message } from "discord.js";
 import { Manager } from "erela.js";
 import { join, resolve } from "path";
+import { Shoukaku, Libraries } from "shoukaku";
+import { Client } from "discord.js";
 // Config
 import * as config from "../config.json";
 import privateLavalink from "../config/lavalink";
@@ -56,11 +58,13 @@ class Overtunes extends SapphireClient {
         });
     }
 
+    public audioManager = new ShoukakuHandler(this);
 }
 
 declare module "@sapphire/framework" {
     export interface SapphireClient {
         manager: Manager,
+        audioManager: ShoukakuHandler
     }
 }
 
