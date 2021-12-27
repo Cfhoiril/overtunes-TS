@@ -11,6 +11,11 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
+        return msg.channel.send({
+            embeds: new MessageEmbed()
+                .setColor("RED")
+                .setDescription("This commands currently disabled")
+        })
         const player = this.container.client.manager.get(msg.guildId!);
 
         player?.setDistortion(!player?.filters?.distortion!);
