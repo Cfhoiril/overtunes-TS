@@ -9,6 +9,7 @@ import privateLavalink from "../config/lavalink";
 import publicLavalink from "../config/lavalink2"
 import plugin from "../config/plugin";
 import guild from "../database/Manager/GuildManager"
+import ShoukakuHandler from "./shoukakuHandler";
 
 class Overtunes extends SapphireClient {
     public constructor() {
