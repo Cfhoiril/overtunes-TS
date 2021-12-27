@@ -55,15 +55,6 @@ class Overtunes extends SapphireClient {
         });
     }
 
-    public manager = new Manager({
-        nodes: privateLavalink,
-        send: (id, payload) => {
-            const guild = this.guilds.cache.get(id);
-            if (guild) guild.shard.send(payload);
-        },
-        autoPlay: true,
-        plugins: plugin
-    });
 }
 
 declare module "@sapphire/framework" {
