@@ -46,10 +46,10 @@ export class MusicCommand extends Command {
                 player.addSong(track!)
             }
         } else {
-            player.addSong(tracks[0]!)
+            player.addSong(tracks[0] as unknown as kazagumoTrack)
         }
 
-        if (!player.current) return player.play();
+        if (!player.playing) return player.play();
 
         if (res.type === "PLAYLIST") {
             msg.channel.send({
