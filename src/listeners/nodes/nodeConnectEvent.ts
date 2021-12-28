@@ -5,7 +5,7 @@ import chalk from "chalk";
 
 @ApplyOptions<ListenerOptions>({
     name: "nodeConnect",
-    emitter: "audioManager" as keyof Client,
+    emitter: "musicManager" as keyof Client,
     event: "ready"
 })
 

@@ -5,14 +5,13 @@ import { Manager } from "erela.js";
 import { join, resolve } from "path";
 import { Shoukaku, Libraries } from "shoukaku";
 import { Client } from "discord.js";
+import Kazagumo from "kazagumo";
 // Config
 import * as config from "../config.json";
 import privateLavalink from "../config/lavalink";
 import publicLavalink from "../config/lavalink2"
-import plugin from "../config/plugin";
+import shoukaku from "../config/shoukaku";
 import guild from "../database/Manager/GuildManager"
-import ShoukakuHandler from "./shoukakuHandler";
-import AudioQueue from "./audioQueue";
 
 class Overtunes extends SapphireClient {
     public constructor() {
@@ -58,16 +57,13 @@ class Overtunes extends SapphireClient {
             caseInsensitiveCommands: true
         });
     }
-
-    public audioManager = new ShoukakuHandler(this);
-    public audioQueue = new AudioQueue(this);
+    public musicManager = new Kazagumo(this, privateLavalink, shoukaku, { defaultSearchEngine: "youtube", spotify: { clientSecret: config.spotify_clientSecret, clientId: config.spotify_clientId } });
 }
 
 declare module "@sapphire/framework" {
     export interface SapphireClient {
         manager: Manager,
-        audioManager: ShoukakuHandler,
-        audioQueue: AudioQueue
+        musicManager: Kazagumo,
     }
 }
 
