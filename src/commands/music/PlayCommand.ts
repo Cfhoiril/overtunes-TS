@@ -2,7 +2,6 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { Args, Command, CommandOptions } from "@sapphire/framework";
 import { Message, MessageEmbed } from "discord.js";
 import { TrackUtils } from "erela.js";
-import { kazagumoTrack } from "kazagumo";
 import * as config from "../../config.json";
 import prefix from "../../database/Manager/GuildManager";
 
@@ -24,47 +23,91 @@ export class MusicCommand extends Command {
                 .setDescription(`To play a song you need to specify the track title, or you can try **${guildPrefix.prefix ?? config.prefix}play everything sucks**`)]
         });
 
-        const player = await this.container.client.musicManager.createPlayer({
-            guildId: msg.guild?.id as string,
-            shardId: msg.guild?.shardId as number,
-            textId: msg.channel.id as string,
-            voiceId: msg.member?.voice.channel?.id as string,
-            deaf: false
-        });
+        let player = this.container.client.audioQueue.get(msg.guild?.id);
+        const node = this.container.client.audioManager.getNode()
 
-        const res = await player.search(argument.value, msg.author);
-        if (!res.tracks.length) return msg.channel.send({
-            embeds: [new MessageEmbed()
-                .setDescription("No results matching the query found.")
-                .setColor("RED")
-            ]
-        });
-
-        const tracks = res.tracks;
-        if (res.type === "PLAYLIST") {
-            for (const track of tracks) {
-                player.addSong(track!)
+        // ! check if the string is url
+        if (this.checkUrl(argument.value)) {
+            const res = await node.rest.resolve(argument.value);
+            if (!res || !res.tracks.length) {
+                return msg.channel.send({
+                    embeds: [new MessageEmbed()
+                        .setDescription("No results matching the query found.")
+                        .setColor("RED")
+                    ]
+                });
             }
-        } else {
-            player.addSong(tracks[0] as unknown as kazagumoTrack)
+
+            const { type, tracks, playlistName } = res;
+
+            const track = tracks.shift();
+            // @ts-ignore
+            track.info.requester = msg.author;
+            const isPlaylist = type === "PLAYLIST";
+            const result = await this.container.client.audioQueue.handle(msg, node, track!)
+
+            if (isPlaylist) {
+                for (const track of tracks) {
+                    // @ts-nocheck
+                    await this.container.client.audioQueue.handle(msg, node, track!);
+                }
+            }
+
+            if (player) {
+                // ! send playlist message if tracks is playlist
+                if (isPlaylist) {
+                    return msg.channel.send({
+                        embeds: [new MessageEmbed()
+                            .setDescription(`Added ${tracks.length} tracks from ${playlistName}`)
+                            .setColor(msg.guild?.me?.displayHexColor!)
+                            .setTimestamp()]
+                    });
+                }
+                // if not
+                else {
+                    return msg.channel.send({
+                        embeds: [new MessageEmbed()
+                            .setDescription(`Added ${track?.info.title} [${msg.author}]`)
+                            .setColor(msg.guild?.me?.displayHexColor!)
+                            .setTimestamp()]
+                    });
+                }
+            }
+
+            result?.play()
+            return;
+        }
+        const search = await node.rest.resolve(argument.value, 'youtube');
+        if (!search || !search.tracks.length) {
+            return msg.channel.send({
+                embeds: [new MessageEmbed()
+                    .setDescription("No results matching the query found.")
+                    .setColor("RED")
+                ]
+            });
         }
 
-        if (!player.playing) return player.play();
-
-        if (res.type === "PLAYLIST") {
+        const track = search.tracks.shift();
+        // @ts-ignore
+        track.info.requester = msg.author;
+        const res = await this.container.client.audioQueue.handle(msg, node, track!);
+        if (player) {
             msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription(`Added ${tracks.length} tracks from ${res.playlistName}`)
+                    .setDescription(`Added ${track?.info?.title} [${msg.author}]`)
                     .setColor(msg.guild?.me?.displayHexColor!)
                     .setTimestamp()]
             });
-        } else {
-            // msg.channel.send({
-            //     embeds: [new MessageEmbed()
-            //         .setDescription(`Added ${tracks[0]?.title} [${msg.author}]`)
-            //         .setColor(msg.guild?.me?.displayHexColor!)
-            //         .setTimestamp()]
-            // });
+        }
+        res?.play()
+    }
+
+    private checkUrl(url: string) {
+        try {
+            new URL(url);
+            return true;
+        } catch {
+            return false;
         }
     }
 }
