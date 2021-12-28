@@ -12,6 +12,7 @@ import publicLavalink from "../config/lavalink2"
 import plugin from "../config/plugin";
 import guild from "../database/Manager/GuildManager"
 import ShoukakuHandler from "./shoukakuHandler";
+import AudioQueue from "./audioQueue";
 
 class Overtunes extends SapphireClient {
     public constructor() {
@@ -59,12 +60,14 @@ class Overtunes extends SapphireClient {
     }
 
     public audioManager = new ShoukakuHandler(this);
+    public audioQueue = new AudioQueue(this);
 }
 
 declare module "@sapphire/framework" {
     export interface SapphireClient {
         manager: Manager,
-        audioManager: ShoukakuHandler
+        audioManager: ShoukakuHandler,
+        audioQueue: AudioQueue
     }
 }
 
