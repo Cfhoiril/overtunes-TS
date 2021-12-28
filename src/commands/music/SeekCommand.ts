@@ -11,7 +11,6 @@ import prefix from "../../database/Manager/GuildManager";
     name: "seek",
     aliases: [],
     requiredClientPermissions: ["CONNECT", "SPEAK"],
-    preconditions: ["inVoice", "sameVoice", "havePlayer", "isDjOnly", "isSpecialChannel", "haveQueue"]
 })
 
 export class MusicCommand extends Command {

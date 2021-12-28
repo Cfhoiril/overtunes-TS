@@ -11,7 +11,6 @@ import { toColonNotation } from "colon-notation";
     name: "search",
     aliases: ["find"],
     requiredClientPermissions: ["CONNECT", "SPEAK"],
-    preconditions: ["inVoice", "canConnect", "sameVoice", "isSpecialChannel"]
 })
 
 export class MusicCommand extends Command {

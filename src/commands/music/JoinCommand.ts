@@ -6,7 +6,6 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
     name: "join",
     requiredClientPermissions: ["CONNECT", "SPEAK"],
     aliases: ['summon', 'summons', 'connect'],
-    preconditions: ["inVoice", "sameVoice", "isSpecialChannel"]
 })
 
 export class MusicCommand extends Command {

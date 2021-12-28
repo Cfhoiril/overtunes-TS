@@ -6,7 +6,6 @@ import { TrackUtils } from "erela.js";
 
 @ApplyOptions<CommandOptions>({
     name: "load",
-    preconditions: ["canConnect", "sameVoice", "inVoice", "isDjOnly", "isSpecialChannel"]
 })
 
 export class PlaylistCommand extends Command {

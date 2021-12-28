@@ -1,4 +1,4 @@
-import { Guild, Client, TextChannel, GuildMember, Channel } from "discord.js";
+import { Guild, Message, Client, TextChannel, GuildMember, Channel } from "discord.js";
 import { ShoukakuQueue, ShoukakuSocket, ShoukakuTrack } from "shoukaku";
 import QueueManager from "./audioManager";
 
@@ -11,26 +11,26 @@ class AudioQueue extends Map {
         this.client = client
     }
 
-    async handle(guild: Guild, member: GuildMember, channel: Channel, node: ShoukakuSocket, track: ShoukakuTrack) {
-        const queue = this.get(guild.id);
+    async handle(message: Message, node: ShoukakuSocket, track: ShoukakuTrack) {
+        const queue = this.get(message.guild?.id);
 
         if (!queue) {
             const player = await node.joinChannel({
-                guildId: guild.id,
-                shardId: guild.shardId,
-                channelId: channel.id,
+                guildId: message.guild?.id as string,
+                shardId: message.guild?.shardId as number,
+                channelId: message.channel.id,
                 deaf: false
             });
 
             const dispatcher = new QueueManager({
                 client: this.client,
-                guild: guild,
-                text: channel,
+                guild: message.guild,
+                text: message.channel,
                 player: player
             });
 
             dispatcher.queue.push(track);
-            this.set(guild.id, dispatcher);
+            this.set(message.guild?.id, dispatcher);
             return dispatcher;
         }
 

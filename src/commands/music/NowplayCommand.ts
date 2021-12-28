@@ -9,7 +9,6 @@ import { progress } from "oxy-progress-bar1";
 @ApplyOptions<CommandOptions>({
     name: "nowplaying",
     aliases: ["nowplay", "np"],
-    preconditions: ["havePlayer", "haveQueue"]
 })
 
 export class MusicCommand extends Command {

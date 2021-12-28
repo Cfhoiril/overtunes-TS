@@ -5,7 +5,6 @@ import playlist from "../../database/Manager/PlaylistManager";
 
 @ApplyOptions<CommandOptions>({
     name: "save",
-    preconditions: ["inVoice", "sameVoice", "havePlayer", "haveQueue"]
 })
 
 export class PlaylistCommand extends Command {
