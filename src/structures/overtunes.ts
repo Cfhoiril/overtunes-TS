@@ -3,7 +3,7 @@ import { SapphireClient } from "@sapphire/framework";
 import { Intents, Message } from "discord.js";
 import { Manager } from "erela.js";
 import { join, resolve } from "path";
-import { Shoukaku, Libraries } from "shoukaku";
+import { Shoukaku, Libraries, ShoukakuPlayer } from "shoukaku";
 import { Client } from "discord.js";
 // Config
 import * as config from "../config.json";
@@ -67,7 +67,7 @@ declare module "@sapphire/framework" {
     export interface SapphireClient {
         manager: Manager,
         audioManager: ShoukakuHandler,
-        audioQueue: AudioQueue
+        audioQueue: AudioQueue,
     }
 }
 

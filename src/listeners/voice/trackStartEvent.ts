@@ -5,15 +5,15 @@ import { Message, MessageEmbed, TextChannel, Snowflake } from "discord.js";
 import { TextBasedChannelTypes, VoiceBasedChannelTypes } from "@sapphire/discord.js-utilities";
 import { Client } from "discord.js";
 import Set from "../../database/Manager/MusicManager";
-
+import { ShoukakuPlayer } from "shoukaku"
 @ApplyOptions<ListenerOptions>({
     name: "trackStart",
-    emitter: "manager" as keyof Client,
-    event: "trackStart"
+    emitter: "audioManager" as keyof Client,
+    event: "playerTrackStart"
 })
 
 export class trackStartEvent extends Listener {
-    async run(player: Player, track: Track) {
+    async run(player: ShoukakuPlayer) {
         if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_STAGE_VOICE")
             this.container.client.guilds.cache.get(player.guild)?.me?.voice?.setSuppressed(false).catch(e => { this.container.client.guilds.cache.get(player.guild)?.me?.voice?.setRequestToSpeak(true) })
         if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_VOICE")

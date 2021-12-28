@@ -99,7 +99,7 @@ export class MusicCommand extends Command {
                     .setTimestamp()]
             });
         }
-        res?.play()
+        res?.play();
     }
 
     private checkUrl(url: string) {
