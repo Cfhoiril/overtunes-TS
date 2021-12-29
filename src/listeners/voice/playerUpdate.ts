@@ -8,6 +8,7 @@ import { TextBasedChannelTypes, VoiceBasedChannelTypes } from "@sapphire/discord
 import { toColonNotation } from "colon-notation";
 // @ts-expect-error
 import date from "date-and-time";
+import { ShoukakuPlayer, ShoukakuTrack } from "shoukaku";
 
 // Normal Day
 const images = [
@@ -26,97 +27,93 @@ const imagesHalloween = [
 
 @ApplyOptions<ListenerOptions>({
     name: "nodeRaw",
-    emitter: "manager" as keyof Client,
-    event: "nodeRaw"
+    emitter: "audioManager" as keyof Client,
+    event: "playerUpdate"
 })
 
 export class nodeRawEvent extends Listener {
-    async run(payload: any, msg: Message) {
-        if (payload.op === "playerUpdate") {
-            const player = this.container.client.manager.get(payload.guildId);
-            if (player) {
-                if (player.queue.current) {
-                    const channel = this.container.client.channels.cache.get(player?.textChannel!) as TextBasedChannelTypes;
+    async run(shoukakuPlayer: ShoukakuPlayer) {
+        const player = this.container.client.audioQueue.get(shoukakuPlayer.connection.guildId);
 
-                    let stop = new MessageButton()
-                        .setStyle('PRIMARY')
-                        .setCustomId('stop1')
-                        .setLabel('⏹')
+        let stop = new MessageButton()
+            .setStyle('PRIMARY')
+            .setCustomId('stop1')
+            .setLabel('⏹')
 
-                    let next = new MessageButton()
-                        .setStyle('PRIMARY')
-                        .setCustomId('skip1')
-                        .setLabel('⏭️')
+        let next = new MessageButton()
+            .setStyle('PRIMARY')
+            .setCustomId('skip1')
+            .setLabel('⏭️')
 
-                    let pause = new MessageButton()
-                        .setCustomId('pause1')
-                        .setLabel(`${player?.paused ? '▶' : '⏸'}`)
-                        .setStyle(`${player?.paused ? 'SUCCESS' : 'PRIMARY'}`)
+        let pause = new MessageButton()
+            .setCustomId('pause1')
+            .setLabel(`${player?.paused ? '▶' : '⏸'}`)
+            .setStyle(`${player?.paused ? 'SUCCESS' : 'PRIMARY'}`)
 
-                    let loop = new MessageButton()
-                        .setStyle(`${player?.queueRepeat ? 'SUCCESS' : player?.trackRepeat ? 'SUCCESS' : 'PRIMARY'}`)
-                        .setLabel(`${player?.queueRepeat ? '🔁' : player?.trackRepeat ? '🔂' : '🔁'}`)
-                        .setCustomId('loop1')
+        let loop = new MessageButton()
+            .setStyle(`${player?.queueRepeat ? 'SUCCESS' : player?.trackRepeat ? 'SUCCESS' : 'PRIMARY'}`)
+            .setLabel(`${player?.queueRepeat ? '🔁' : player?.trackRepeat ? '🔂' : '🔁'}`)
+            .setCustomId('loop1')
 
 
-                    let shuffle = new MessageButton()
-                        .setStyle('PRIMARY')
-                        .setLabel('🔀')
-                        .setCustomId('shuffle1')
+        let shuffle = new MessageButton()
+            .setStyle('PRIMARY')
+            .setLabel('🔀')
+            .setCustomId('shuffle1')
 
-                    let row = new MessageActionRow()
-                        .addComponents(stop)
-                        .addComponents(shuffle)
-                        .addComponents(pause)
-                        .addComponents(next)
-                        .addComponents(loop)
+        let row = new MessageActionRow()
+            .addComponents(stop)
+            .addComponents(shuffle)
+            .addComponents(pause)
+            .addComponents(next)
+            .addComponents(loop)
 
-                    const check = await Set.findOne({ Guild: player?.guild });
+        const check = await Set.findOne({ Guild: player?.guild.id });
 
-                    if (!channel || channel === null) return check.Channel = null, check.Message = null, check.save();
-                    if (!check || check.Channel === null || check.Message === null) return;
-                    player.textChannel = check.Channel;
+        if (!player.text || player.text === null) return check.Channel = null, check.Message = null, check.save();
+        if (!check || check.Channel === null || check.Message === null) return;
+        player.textChannel = check.Channel;
 
-                    channel.messages.fetch(check.Message).catch(e => {
-                        check.Channel = null
-                        check.Message = null
-                        check.save()
+        player.text.messages.fetch(check.Message).catch(() => {
+            check.Channel = null
+            check.Message = null
+            check.save()
 
-                        return channel.send({
-                            embeds: [new MessageEmbed()
-                                .setDescription('Template messages not found, back to normal mode')
-                                .setColor('RED')
-                            ]
-                        });
-                    })
+            return player.text.send({
+                embeds: [new MessageEmbed()
+                    .setDescription('Template messages not found, back to normal mode')
+                    .setColor('RED')
+                ]
+            });
+        })
 
-                    let embeds = new MessageEmbed()
-                        .setTitle('Now playing')
-                        .setDescription(`${player?.queue.current?.title} [${player?.queue.current?.requester}]`)
-                        .setColor(this.container.client.guilds?.cache?.get(player?.guild)?.me?.displayHexColor!)
-                        .setImage(`${images[Math.floor(Math.random() * images.length)]}`)
-                        .setFooter(`Duration: ${player?.queue.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration! ?? 1000)} | Total Songs: ${player?.queue?.size} | Volume: ${player?.volume}`)
+        let embeds = new MessageEmbed()
+            .setTitle('Now playing')
+            .setDescription(`${player.current.info.title} [${player.current.info.requester}]`)
+            .setColor(player.guild?.me?.displayHexColor!)
+            .setImage(`${images[Math.floor(Math.random() * images.length)]}`)
+            .setFooter(`Duration: ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length ?? 1000)} | Total Songs: ${player?.queue?.length} | Volume: ${player?.player.filters.volume * 100}`)
 
-                    let months = date.format(new Date(), 'MMMM');
-                    if (months.toLowerCase().includes("october")) embeds.setImage(`${imagesHalloween[Math.floor(Math.random() * imagesHalloween.length)]}`);
+        let months = date.format(new Date(), 'MMMM');
+        if (months.toLowerCase().includes("october")) embeds.setImage(`${imagesHalloween[Math.floor(Math.random() * imagesHalloween.length)]}`);
 
-                    let number = 0;
-                    let queue = player.queue.slice(0, 5).map(x => `**${++number}.** ${x.title} - ${x.isStream ? "LIVE" : toColonNotation(x.duration ?? 1000)}`).reverse().join("\n")
+        let number = 0;
+        let queue = player.queue.slice(0, 5).map((x: ShoukakuTrack) => `**${++number}.** ${x.info.title} - ${x.info.isStream ? "LIVE" : toColonNotation(x.info.length ?? 1000)}`).reverse().join("\n")
 
-                    channel.messages.fetch(check.Message).then(x => {
-                        try {
-                            x.edit({
-                                content: `${player.queue.length > 0 ? `**Up Next:**\n${queue}` : "Join a voice channel then play something"}`,
-                                embeds: [embeds],
-                                components: [row]
-                            })
-                        } catch {
-                            return;
-                        }
-                    })
-
-                }
+        player.text.messages.fetch(check.Message).then((x: Message) => {
+            try {
+                x.edit({
+                    content: `${player.queue.length > 0 ? `**Up Next:**\n${queue}` : "Join a voice channel then play something"}`,
+                    embeds: [embeds],
+                    components: [row]
+                })
+            } catch {
+                return;
             }
-        }
+        })
+
+
+
+
     }
 }

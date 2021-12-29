@@ -53,25 +53,24 @@ export class MusicCommand extends Command {
                 }
             }
 
-            if (player) {
-                // ! send playlist message if tracks is playlist
-                if (isPlaylist) {
-                    return msg.channel.send({
-                        embeds: [new MessageEmbed()
-                            .setDescription(`Added ${tracks.length} tracks from ${playlistName}`)
-                            .setColor(msg.guild?.me?.displayHexColor!)
-                            .setTimestamp()]
-                    });
-                }
-                // if not
-                else {
-                    return msg.channel.send({
-                        embeds: [new MessageEmbed()
-                            .setDescription(`Added ${track?.info.title} [${msg.author}]`)
-                            .setColor(msg.guild?.me?.displayHexColor!)
-                            .setTimestamp()]
-                    });
-                }
+            // ! send playlist message if tracks is playlist
+            if (isPlaylist) {
+                msg.channel.send({
+                    embeds: [new MessageEmbed()
+                        .setDescription(`Added ${tracks.length} tracks from ${playlistName}`)
+                        .setColor(msg.guild?.me?.displayHexColor!)
+                        .setTimestamp()]
+                });
+            }
+            // if not
+            else {
+                msg.channel.send({
+                    embeds: [new MessageEmbed()
+                        .setDescription(`Added ${track?.info.title} [${msg.author}]`)
+                        .setColor(msg.guild?.me?.displayHexColor!)
+                        .setTimestamp()]
+                });
+
             }
 
             result?.play()
@@ -91,14 +90,13 @@ export class MusicCommand extends Command {
         // @ts-ignore
         track.info.requester = msg.author;
         const res = await this.container.client.audioQueue.handle(msg, node, track!);
-        if (player) {
-            msg.channel.send({
-                embeds: [new MessageEmbed()
-                    .setDescription(`Added ${track?.info?.title} [${msg.author}]`)
-                    .setColor(msg.guild?.me?.displayHexColor!)
-                    .setTimestamp()]
-            });
-        }
+        msg.channel.send({
+            embeds: [new MessageEmbed()
+                .setDescription(`Added ${track?.info?.title} [${msg.author}]`)
+                .setColor(msg.guild?.me?.displayHexColor!)
+                .setTimestamp()]
+        });
+
         res?.play();
     }
 
