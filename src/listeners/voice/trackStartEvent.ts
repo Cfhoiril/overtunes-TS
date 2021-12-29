@@ -14,10 +14,10 @@ import Set from "../../database/Manager/MusicManager";
 
 export class trackStartEvent extends Listener {
     async run(player: Player, track: Track) {
-        if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_STAGE_VOICE")
-            this.container.client.guilds.cache.get(player.guild)?.me?.voice?.setSuppressed(false).catch(e => { this.container.client.guilds.cache.get(player.guild)?.me?.voice?.setRequestToSpeak(true) })
-        if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_VOICE")
-            this.container.client.guilds.cache.get(player.guild)?.me?.voice.setDeaf(true).catch(e => { });
+        // if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_STAGE_VOICE")
+        //     this.container.client.guilds.cache.get(player.guild)?.me?.voice?.setSuppressed(false).catch(e => { this.container.client.guilds.cache.get(player.guild)?.me?.voice?.setRequestToSpeak(true) })
+        // if (this.container.client.guilds.cache.get(player.guild)?.me?.voice.channel?.type === "GUILD_VOICE")
+        //     this.container.client.guilds.cache.get(player.guild)?.me?.voice.setDeaf(true).catch(e => { });
 
         const channel = this.container.client.channels.cache.get(player.textChannel!) as TextBasedChannelTypes;
         let special = await Set.findOne({ Guild: player.guild });
