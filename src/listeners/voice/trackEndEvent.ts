@@ -15,13 +15,15 @@ export class trackEndEvent extends Listener {
     async run(shoukakuPlayer: ShoukakuPlayer) {
         const player = this.container.client.audioQueue.get(shoukakuPlayer.connection.guildId);
 
-        player.play();
         player.previous = player.current;
+        player.current = null
 
-        if (player.repeat === 1) player.queue.unshift(player.previous);
-        else if (player.repeat === 2) player.queue.push(player.previous);
+        if (player.repeat === 1) player.queue.push(player.previous)
+        else if (player.repeat === 2) player.queue.unshift(player.previous);
 
         if (player.message) player.message.delete().catch(() => null);
+
+        player.play();
 
         const embed = new MessageEmbed()
             .setTitle('No Music currently playing')

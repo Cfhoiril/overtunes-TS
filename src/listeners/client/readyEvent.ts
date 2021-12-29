@@ -27,8 +27,8 @@ export class readyEvent extends Listener {
             return process.exit(1)
         });
 
-        process.on('unhandledRejection', error => { });
-        process.on('uncaughtException', error => { }); //well this made for client not crashing when error 
+        process.on('unhandledRejection', () => { });
+        process.on('uncaughtException', () => { }); //well this made for client not crashing when error 
 
         this.container.logger.info(chalk.green(`👋 Logged in as ${chalk.white(this.container.client.user?.username)}`));
     }

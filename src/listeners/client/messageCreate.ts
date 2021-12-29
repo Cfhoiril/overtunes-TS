@@ -68,102 +68,98 @@ export class messageCreate extends Listener {
                         });
                     }
 
-                    let player = this.container.client.manager.get(msg.guildId!);
+                    let player = this.container.client.audioQueue.get(msg.guild?.id);
+                    const node = this.container.client.audioManager.getNode()
+
                     if (player && msg.member.voice.channel !== msg.guild?.me?.voice?.channel) return msg.channel.send({
                         embeds: [new MessageEmbed()
                             .setColor("RED")
                             .setDescription(`You must be in the same channel as Me`)]
                     });
 
-
-                    if (!player) {
-                        player = this.container.client.manager.create({
-                            guild: msg.guildId as string,
-                            voiceChannel: msg.member?.voice.channelId as string,
-                            textChannel: msg.channelId as string,
-                            volume: 75,
-                            selfDeafen: false,
-                        })
-                    }
-
-                    if (player.state !== "CONNECTED") {
-                        player.connect();
-                        player.set("autoplay", false);
-                    }
-
-                    let res;
-                    const search = msg.content;
-
-                    try {
-                        res = await player.search(search!, msg.author)
-                        if (res.loadType === 'LOAD_FAILED') {
+                    if (this.checkUrl(msg.content)) {
+                        const res = await node.rest.resolve(msg.content);
+                        if (!res || !res.tracks.length) {
                             return msg.channel.send({
                                 embeds: [new MessageEmbed()
-                                    .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
-                                    .setDescription(`\`\`\`${res.exception?.message!}\`\`\``)
-                                    .setColor("RED")
-                                ]
-                            })
-                        }
-
-                    } catch (err) {
-                        return msg.channel.send({
-                            embeds: [new MessageEmbed()
-                                .setAuthor("Something wrong when searching the track", undefined, "https://discord.gg/hM8U8cHtwu")
-                                .setDescription(`\`\`\`${err}\`\`\``)
-                                .setColor("RED")
-                            ]
-                        })
-                    }
-
-                    switch (res.loadType) {
-                        case "NO_MATCHES":
-                            return msg.channel.send({
-                                embeds: [new MessageEmbed()
-                                    .setDescription("There were no results found")
+                                    .setDescription("No results matching the query found.")
                                     .setColor("RED")
                                 ]
                             });
+                        }
 
-                        case "SEARCH_RESULT":
-                            player.queue.add(res.tracks[0]);
-                            if (!player.playing && !player.paused && !player.queue.size) {
-                                return player.play();
-                            } else {
-                                return msg.channel.send({
-                                    embeds: [new MessageEmbed()
-                                        .setDescription(`Added ${res.tracks[0].title} [${msg.author}]`)
-                                        .setColor(msg.guild?.me?.displayHexColor!)
-                                        .setTimestamp()]
-                                });
+                        const { type, tracks, playlistName } = res;
+
+                        const track = tracks.shift();
+                        // @ts-ignore
+                        track.info.requester = msg.author;
+                        const isPlaylist = type === "PLAYLIST";
+                        const result = await this.container.client.audioQueue.handle(msg, node, track!)
+
+                        if (isPlaylist) {
+                            for (const track of tracks) {
+                                // @ts-nocheck
+                                await this.container.client.audioQueue.handle(msg, node, track!);
                             }
+                        }
 
-                        case "TRACK_LOADED":
-                            player.queue.add(res.tracks[0]);
-                            if (!player.playing && !player.paused && !player.queue.size) {
-                                return player.play();
-                            } else {
-                                return msg.channel.send({
-                                    embeds: [new MessageEmbed()
-                                        .setDescription(`Added ${res.tracks[0].title} [${msg.author}]`)
-                                        .setColor(msg.guild?.me?.displayHexColor!)
-                                        .setTimestamp()]
-                                });
-                            }
-
-                        case "PLAYLIST_LOADED":
-                            player.queue.add(res.tracks)
-                            if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
-                            return msg.channel.send({
+                        // ! send playlist message if tracks is playlist
+                        if (isPlaylist) {
+                            msg.channel.send({
                                 embeds: [new MessageEmbed()
-                                    .setDescription(`Added ${res.tracks.length} tracks from ${res.playlist?.name}`)
+                                    .setDescription(`Added ${tracks.length} tracks from ${playlistName}`)
                                     .setColor(msg.guild?.me?.displayHexColor!)
                                     .setTimestamp()]
                             });
+                        }
+                        // if not
+                        else {
+                            msg.channel.send({
+                                embeds: [new MessageEmbed()
+                                    .setDescription(`Added ${track?.info.title} [${msg.author}]`)
+                                    .setColor(msg.guild?.me?.displayHexColor!)
+                                    .setTimestamp()]
+                            });
+
+                        }
+
+                        result?.play()
+                        return;
                     }
+                    const search = await node.rest.resolve(msg.content, 'youtube');
+                    if (!search || !search.tracks.length) {
+                        return msg.channel.send({
+                            embeds: [new MessageEmbed()
+                                .setDescription("No results matching the query found.")
+                                .setColor("RED")
+                            ]
+                        });
+                    }
+
+                    const track = search.tracks.shift();
+                    // @ts-ignore
+                    track.info.requester = msg.author;
+                    const res = await this.container.client.audioQueue.handle(msg, node, track!);
+                    msg.channel.send({
+                        embeds: [new MessageEmbed()
+                            .setDescription(`Added ${track?.info?.title} [${msg.author}]`)
+                            .setColor(msg.guild?.me?.displayHexColor!)
+                            .setTimestamp()]
+                    });
+
+                    res?.play();
 
                 }
             }
+        }
+    }
+
+    private checkUrl(url: string) {
+        try {
+            new URL(url);
+            return true;
+        } catch {
+            return false;
         }
     }
 }

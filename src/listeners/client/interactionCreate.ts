@@ -16,7 +16,7 @@ export class interactionCreate extends Listener {
         if (interaction.isButton) {
             const data = await channel.findOne({ Channel: interaction.channelId })
             if (data) {
-                const player = this.container.client.manager.get(interaction.guildId!);
+                const player = this.container.client.audioQueue.get(interaction.guildId!);
 
                 // Stop
                 if (interaction.customId === "stop1") {
@@ -40,14 +40,14 @@ export class interactionCreate extends Listener {
                             .setDescription("You must be in the same channel as Me")]
                     });
 
-                    if (!player.queue.current) return interaction.reply({
+                    if (!player.current) return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor("RED")
                             .setDescription("There is no music playing")]
                     });
 
-                    player.queue.clear();
-                    player.stop()
+                    player.stop();
+                    player.skip();
                     return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor(interaction.guild.me.displayHexColor)
@@ -77,13 +77,13 @@ export class interactionCreate extends Listener {
                             .setDescription("You must be in the same channel as Me")]
                     });
 
-                    if (!player.queue.current) return interaction.reply({
+                    if (!player.current) return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor("RED")
                             .setDescription("There is no music playing")]
                     });
 
-                    player.queue.shuffle()
+                    player.shuffle()
                     return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor(interaction.guild.me.displayHexColor)
@@ -113,16 +113,15 @@ export class interactionCreate extends Listener {
                             .setDescription("You must be in the same channel as Me")]
                     });
 
-                    if (!player.queue.current) return interaction.reply({
+                    if (!player.current) return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor("RED")
                             .setDescription("There is no music playing")]
                     });
 
 
-                    if (player.paused) {
-                        player.pause(false);
-                        player.set("pause", false)
+                    if (player.player.paused) {
+                        player.resume();
                         interaction.reply({
                             embeds: [new MessageEmbed()
                                 .setColor(interaction.guild.me.displayHexColor)
@@ -130,8 +129,7 @@ export class interactionCreate extends Listener {
                             ]
                         })
                     } else {
-                        player.pause(true);
-                        player.set("pause", true)
+                        player.pause();
                         interaction.reply({
                             embeds: [new MessageEmbed()
                                 .setColor(interaction.guild.me.displayHexColor)
@@ -163,13 +161,13 @@ export class interactionCreate extends Listener {
                             .setDescription("You must be in the same channel as Me")]
                     });
 
-                    if (!player.queue.current) return interaction.reply({
+                    if (!player.current) return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor("RED")
                             .setDescription("There is no music playing")]
                     });
 
-                    player.stop()
+                    player.skip()
                     return interaction.reply({
                         embeds: [new MessageEmbed()
                             .setColor(interaction.guild.me.displayHexColor)
@@ -199,13 +197,31 @@ export class interactionCreate extends Listener {
                             .setDescription("You must be in the same channel as Me")]
                     });
 
-                    !player.queueRepeat && !player.trackRepeat ? player.setQueueRepeat(true) : !player.trackRepeat ? player.setTrackRepeat(true) : player.setQueueRepeat(false).setTrackRepeat(false)
-                    return interaction.reply({
-                        embeds: [new MessageEmbed()
-                            .setColor(interaction.guild.me.displayHexColor)
-                            .setDescription(`${player.queueRepeat ? 'Looping Current Queue' : player.trackRepeat ? 'Looping Current Track' : 'Looping now disabled'}`)
-                        ]
-                    });
+                    if (player.repeat === 0) {
+                        player.repeat = 1;
+                        return interaction.reply({
+                            embeds: [new MessageEmbed()
+                                .setColor(interaction.guild.me.displayHexColor)
+                                .setDescription(`Looping current Queue`)
+                            ]
+                        });
+                    } else if (player.repeat === 1) {
+                        player.repeat = 2;
+                        return interaction.reply({
+                            embeds: [new MessageEmbed()
+                                .setColor(interaction.guild.me.displayHexColor)
+                                .setDescription(`Looping Current Track`)
+                            ]
+                        });
+                    } else if (player.repeat === 2) {
+                        player.repeat = 0;
+                        return interaction.reply({
+                            embeds: [new MessageEmbed()
+                                .setColor(interaction.guild.me.displayHexColor)
+                                .setDescription(`Looping now disabled`)
+                            ]
+                        });
+                    }
                 }
             }
         }
