@@ -9,26 +9,32 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
-        const autoplay = player?.get("autoplay");
-        if (autoplay === false) {
-            player?.set("autoplay", true);
-            player?.set("requester", msg.author);
-            const search = player?.queue.current?.title!;
-            let res = await player?.search(search, msg.author);
-            player?.queue.add(res?.tracks[4]!);
-            let thing = new MessageEmbed()
-                .setDescription(`Autoplay is now **Enabled**`)
-                .setColor(msg.guild?.me?.displayHexColor!)
-            return msg.channel.send({ embeds: [thing] });
+        if (!player.autoplay) {
+            player.autoplay = true;
+            player.requester = msg.author;
+            const title = player.current.info.title;
 
+            const node = this.container.client.audioManager.getNode();
+            const search = await node.rest.resolve(title, "youtube");
+            const track = search.tracks[2];
+            // @ts-ignore
+            track.info.requester = msg.author;
+            await this.container.client.audioQueue.handle(msg, node, track!);
+
+            return msg.channel.send({
+                embeds: [new MessageEmbed()
+                    .setDescription(`Autoplay is now **Enabled**`)
+                    .setColor(msg.guild?.me?.displayHexColor!)]
+            });
         } else {
-            player?.set("autoplay", false);
-            let thing = new MessageEmbed()
-                .setDescription(`Autoplay is now **Disabled**`)
-                .setColor(msg.guild?.me?.displayHexColor!)
-            return msg.channel.send({ embeds: [thing] });
+            player.autoplay = false;
+            return msg.channel.send({
+                embeds: [new MessageEmbed()
+                    .setDescription(`Autoplay is now **Disabled**`)
+                    .setColor(msg.guild?.me?.displayHexColor!)]
+            });
         }
     }
 }

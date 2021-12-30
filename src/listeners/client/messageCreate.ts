@@ -31,6 +31,7 @@ export class messageCreate extends Listener {
         const data2 = await guild.findOne({ guild: msg.guildId });
         let prefix = data2.prefix ?? config.prefix;
 
+        // check if messages started with prefix or not
         if (!msg.content.toLowerCase().startsWith(prefix.toLowerCase())) {
             let content = msg.content.trim();
             let mention1 = '<@!' + this.container.client.user?.id + '>';
@@ -98,7 +99,8 @@ export class messageCreate extends Listener {
 
                         if (isPlaylist) {
                             for (const track of tracks) {
-                                // @ts-nocheck
+                                // @ts-ignore
+                                track.info.requester = msg.author;
                                 await this.container.client.audioQueue.handle(msg, node, track!);
                             }
                         }

@@ -11,7 +11,7 @@ import { toColonNotation } from "colon-notation";
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
         let first = new MessageButton()
             .setStyle('PRIMARY')
@@ -45,22 +45,22 @@ export class MusicCommand extends Command {
 
 
         const message = await msg.channel.send({
-            content: `${(player?.queue.current && player) ? `**Current Song:** ${player?.queue?.current?.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}` : ""}
-            \`\`\`js\n${player ? `${player?.queue.length ? `${emb}` : "This queue is empty"}` : "This queue is empty"}\`\`\``,
-            components: [row]
+            content: `${(player?.current && player) ? `**Current Song:** ${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}` : ""}\`\`\`js\n${player ? `${player?.queue.length ? `${emb}` : "This queue is empty"}` : "This queue is empty"}\`\`\``, components: [row]
         });
 
         const collector = message.createMessageComponentCollector();
         collector.on('collect', async (i) => {
             await i.deferUpdate();
-            var player = this.container.client.manager.get(msg.guild?.id!);
-            if (!player || !player.queue.current) {
+            var player = this.container.client.audioQueue.get(msg.guild?.id);
+            // @ts-ignore
+            if (!player || !player.current) {
                 message.edit({ content: `\`\`\`js\nThis queue is empty\`\`\``, components: [row] });
                 return;
             }
 
             if (!player.queue.length) {
-                message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\nThis queue is empty\`\`\``, components: [row] });
+                // @ts-ignore
+                message.edit({ content: `**Current Song: **${player.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.duration)}\`\`\`js\nThis queue is empty\`\`\``, components: [row] });
                 return;
             }
 
@@ -68,32 +68,38 @@ export class MusicCommand extends Command {
 
             if (i.customId === 'next') {
                 if (currentPage === embs.length - 1) {
-                    message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
+                    // @ts-ignore
+                    message.edit({ content: `**Current Song: **${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
                     return;
                 }
 
                 currentPage++;
-                message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
+                // @ts-ignore
+                message.edit({ content: `**Current Song: **${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
             }
 
             if (i.customId === 'back') {
                 if (currentPage === 0) {
-                    message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
+                    // @ts-ignore
+                    message.edit({ content: `**Current Song: **${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
                     return;
                 }
 
                 --currentPage;
-                message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
+                // @ts-ignore
+                message.edit({ content: `**Current Song: **${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}\`\`\`js\n${embs[currentPage]}\`\`\``, components: [row] });
             }
 
             if (i.customId === 'last') {
                 currentPage = embs.length - 1
-                message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\n${embs[embs.length - 1]}\`\`\``, components: [row] });
+                // @ts-ignore
+                message.edit({ content: `**Current Song: **${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}\`\`\`js\n${embs[embs.length - 1]}\`\`\``, components: [row] });
             }
 
             if (i.customId === 'first') {
                 currentPage = 0
-                message.edit({ content: `**Current Song: **${player.queue.current.title} - ${player?.queue?.current?.isStream ? "LIVE" : toColonNotation(player?.queue.current?.duration)}\`\`\`js\n${embs[0]}\`\`\``, components: [row] });
+                // @ts-ignore
+                message.edit({ content: `**Current Song: **${player?.current.info.title} - ${player?.current.info.isStream ? "LIVE" : toColonNotation(player?.current.info.length)}\`\`\`js\n${embs[0]}\`\`\``, components: [row] });
             }
         })
 
@@ -104,7 +110,7 @@ export class MusicCommand extends Command {
                 const current = queue.slice(i, k);
                 let j = i;
                 k += 10
-                const info = current.map((track: any) => `${++j}. ${track.title} - ${track.isStream ? "LIVE" : toColonNotation(track.duration)}`).join("\n");
+                const info = current.map((track: any) => `${++j}. ${track.info.title} - ${track.info.isStream ? "LIVE" : toColonNotation(track.info.length)}`).join("\n");
                 emb.push(info);
             }
             return emb;

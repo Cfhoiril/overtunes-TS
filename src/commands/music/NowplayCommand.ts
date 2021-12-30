@@ -13,17 +13,17 @@ import { progress } from "oxy-progress-bar1";
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
-        var total = player?.queue?.current?.duration;
-        var current = player?.position;
+        var total = player.current.info.length;
+        var current = player?.player.position;
         var slider = '🟠', bar = '▬', size = 20;
 
         let now = new MessageEmbed()
             .setTitle('Current song')
-            .setDescription(`${player?.queue?.current?.title} [${player?.queue?.current?.requester}]`)
+            .setDescription(`${player.current.info.title} [${player.current.info.requester}]`)
             .setColor(msg.guild?.me?.displayHexColor!)
-            .setFooter(`${toColonNotation(player?.position)} ${progress(bar, current, total, slider, size)[0]} ${player?.queue?.current?.isStream ? 'LIVE' : toColonNotation(player?.queue?.current?.duration ?? 1000)}`)
+            .setFooter(`${toColonNotation(player?.position)} ${progress(bar, current, total, slider, size)[0]} ${player.current.info.isStream ? 'LIVE' : toColonNotation(player.current.info.length ?? 1000)}`)
         return msg.channel.send({ embeds: [now] });
     }
 }

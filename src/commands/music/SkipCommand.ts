@@ -10,16 +10,9 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
-        const autoplay = player?.get("autoplay");
-
-        if (autoplay === false) {
-            player?.stop();
-        } else {
-            player?.stop();
-            player?.set("autoplay", false);
-        }
+        player.skip()
         msg.react('⏭️').catch(e => { })
     }
 }

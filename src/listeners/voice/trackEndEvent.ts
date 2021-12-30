@@ -15,6 +15,18 @@ export class trackEndEvent extends Listener {
     async run(shoukakuPlayer: ShoukakuPlayer) {
         const player = this.container.client.audioQueue.get(shoukakuPlayer.connection.guildId);
 
+        if (player.autoplay) {
+            const requester = player.requester;
+            const identifier = player.current.info.identifier
+            const search = `https://www.youtube.com/watch?v=${identifier}&list=RD${identifier}`;
+            const node = this.container.client.audioManager.getNode();
+            let res = await node.rest.resolve(search);
+            const track = res.tracks[2];
+            // @ts-ignore
+            track.info.requester = requester
+            player.queue.push(track);
+        }
+
         player.previous = player.current;
         player.current = null
 
@@ -43,14 +55,13 @@ export class trackEndEvent extends Listener {
 
         let pause = new MessageButton()
             .setCustomId('pause1')
-            .setLabel(`${player?.paused ? '▶' : '⏸'}`)
-            .setStyle(`${player?.paused ? 'SUCCESS' : 'PRIMARY'}`)
+            .setLabel(`${player?.player.paused ? '▶' : '⏸'}`)
+            .setStyle(`${player?.player.paused ? 'SUCCESS' : 'PRIMARY'}`)
 
         let loop = new MessageButton()
-            .setStyle(`${player?.queueRepeat ? 'SUCCESS' : player?.trackRepeat ? 'SUCCESS' : 'PRIMARY'}`)
-            .setLabel(`${player?.queueRepeat ? '🔁' : player?.trackRepeat ? '🔂' : '🔁'}`)
+            .setStyle(`${(player.repeat === 1) ? 'SUCCESS' : (player.repeat === 2) ? 'SUCCESS' : 'PRIMARY'}`)
+            .setLabel(`${(player.repeat === 1) ? '🔁' : (player.repeat === 2) ? '🔂' : '🔁'}`)
             .setCustomId('loop1')
-
 
         let shuffle = new MessageButton()
             .setStyle('PRIMARY')
@@ -63,15 +74,6 @@ export class trackEndEvent extends Listener {
             .addComponents(pause)
             .addComponents(next)
             .addComponents(loop)
-
-        // const autoplay = player.get("autoplay")
-        // if (autoplay === true) {
-        //     const requester = player.get("requester");
-        //     const identifier = player.queue.current?.identifier;
-        //     const search = `https://www.youtube.com/watch?v=${identifier}&list=RD${identifier}`;
-        //     let res = await player.search(search, requester);
-        //     player.queue.add(res.tracks[3]);
-        // }
 
         const data = await Set.findOne({ Guild: player.guild.id });
         if (!data.Stay) {

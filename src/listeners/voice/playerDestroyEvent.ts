@@ -62,7 +62,7 @@ export class playerDestroyEvent extends Listener {
             .addComponents(next)
             .addComponents(loop)
 
-        const check = await Set.findOne({ Guild: player.guild });
+        const check = await Set.findOne({ Guild: player.guild.id });
         if (!player.text || player.text === null) return check.Channel = null, check.Message = null, check.save();
         if (!check || check.Channel === null || check.Message === null) return;
 

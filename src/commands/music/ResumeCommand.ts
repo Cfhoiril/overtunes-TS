@@ -10,7 +10,7 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
         if (!player?.paused) return msg.channel.send({
             embeds: [new MessageEmbed()
@@ -19,9 +19,7 @@ export class MusicCommand extends Command {
             ]
         });
 
-
-        player?.pause(false);
-        player?.set("pause", false)
+        player?.resume();
         msg.react('👌').catch(e => { })
     }
 }

@@ -1,6 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Args, Command, CommandOptions } from "@sapphire/framework";
 import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
+import QueueManager from "../../structures/audioManager";
 
 @ApplyOptions<CommandOptions>({
     name: "join",
@@ -10,16 +11,22 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        let player = this.container.client.manager.create({
-            guild: msg.guildId as string,
-            voiceChannel: msg.member?.voice.channelId as string,
-            textChannel: msg.channelId as string,
-            volume: 75,
-            selfDeafen: false,
-        })
+        const node = this.container.client.audioManager.getNode();
+        const player = await node.joinChannel({
+            guildId: msg.guild?.id as string,
+            shardId: msg.guild?.shardId as number,
+            channelId: msg?.member?.voice?.channel?.id as string,
+            deaf: false
+        });
 
-        player.connect()
-        player.set("autoplay", false);
+        const dispatcher = new QueueManager({
+            client: this.container.client,
+            guild: msg.guild,
+            text: msg.channel,
+            player: player,
+        });
+
+        this.container.client.audioQueue.set(msg.guild?.id, dispatcher)
 
         msg.react('👌').catch(e => { })
     }

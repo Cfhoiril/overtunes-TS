@@ -35,6 +35,8 @@ export class nodeRawEvent extends Listener {
     async run(shoukakuPlayer: ShoukakuPlayer) {
         const player = this.container.client.audioQueue.get(shoukakuPlayer.connection.guildId);
 
+        if (!player.current) return;
+
         let stop = new MessageButton()
             .setStyle('PRIMARY')
             .setCustomId('stop1')
@@ -47,12 +49,12 @@ export class nodeRawEvent extends Listener {
 
         let pause = new MessageButton()
             .setCustomId('pause1')
-            .setLabel(`${player?.paused ? '▶' : '⏸'}`)
-            .setStyle(`${player?.paused ? 'SUCCESS' : 'PRIMARY'}`)
+            .setLabel(`${player?.player.paused ? '▶' : '⏸'}`)
+            .setStyle(`${player?.player.paused ? 'SUCCESS' : 'PRIMARY'}`)
 
         let loop = new MessageButton()
-            .setStyle(`${player?.queueRepeat ? 'SUCCESS' : player?.trackRepeat ? 'SUCCESS' : 'PRIMARY'}`)
-            .setLabel(`${player?.queueRepeat ? '🔁' : player?.trackRepeat ? '🔂' : '🔁'}`)
+            .setStyle(`${(player.repeat === 1) ? 'SUCCESS' : (player.repeat === 2) ? 'SUCCESS' : 'PRIMARY'}`)
+            .setLabel(`${(player.repeat === 1) ? '🔁' : (player.repeat === 2) ? '🔂' : '🔁'}`)
             .setCustomId('loop1')
 
 

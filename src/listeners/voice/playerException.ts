@@ -14,7 +14,8 @@ export class playerException extends Listener {
     async run(shoukakuPlayer: ShoukakuPlayer) {
         const player = this.container.client.audioQueue.get(shoukakuPlayer.connection.guildId);
 
-        player.message.delete()
+        player.message.delete().catch(() => { });
+
         player.text.send({
             embeds: [new MessageEmbed()
                 .setColor("RED")

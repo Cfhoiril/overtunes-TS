@@ -10,21 +10,21 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
-        if (player?.queue.previous == null) return msg.channel.send({
+        if (!player.previous) return msg.channel.send({
             embeds: [new MessageEmbed()
                 .setDescription('I do not found **Previous tracks**')
                 .setColor('RED')
             ]
         })
 
-        if (player?.queue.current) {
-            player?.queue.unshift(player?.queue?.previous!);
-            player.stop();
+        if (player?.current) {
+            player?.queue.unshift(player?.previous!);
+            player.skip();
             msg.react('⏮️').catch(e => { })
         } else {
-            player?.queue.add(player?.queue?.previous!)
+            player?.queue.push(player?.previous!)
             player?.play();
             msg.react('⏮️').catch(e => { })
         }

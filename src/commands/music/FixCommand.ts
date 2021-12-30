@@ -9,7 +9,7 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
-        msg.guild?.me?.voice?.channel?.setRTCRegion('hongkong').catch(e => { })
+        msg.guild?.me?.voice?.channel?.setRTCRegion('hongkong').catch(e => { msg.react('🚫').catch(e => { }) })
         msg.react('🔧').catch(e => { })
     }
 }

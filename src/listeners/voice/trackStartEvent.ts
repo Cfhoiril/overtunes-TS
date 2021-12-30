@@ -37,6 +37,14 @@ export class trackStartEvent extends Listener {
                     ]
                 })
             });
+
+            player.text.messages.fetch({
+                limit: 10
+            }).then((messages: Array<Message>) => {
+                messages.filter(m => m.id != special.Message).map(delMessage => {
+                    delMessage.delete()
+                })
+            })
         } else {
             if (special && special.Channel === player.textChannel) return;
             if (special.Announce) {
