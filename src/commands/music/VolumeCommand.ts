@@ -11,12 +11,12 @@ import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
         const argument = await args.restResult("string");
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
         if (!argument.success) {
             return msg.channel.send({
                 embeds: [new MessageEmbed()
-                    .setDescription(`The current volume is: **${player?.volume}%**`)
+                    .setDescription(`The current volume is: **${player?.player.filters.volume * 100}%**`)
                     .setColor(msg.guild?.me?.displayHexColor!)]
             })
         }
@@ -37,7 +37,7 @@ export class MusicCommand extends Command {
             });
         }
 
-        player?.setVolume(volume);
+        player?.player.setVolume(volume / 100);
 
         if (volume > player?.volume!) {
             return msg.channel.send({

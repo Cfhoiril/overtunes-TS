@@ -48,7 +48,8 @@ export class MusicCommand extends Command {
 
             if (isPlaylist) {
                 for (const track of tracks) {
-                    // @ts-nocheck
+                    // @ts-ignore
+                    track.info.requester = msg.author;
                     await this.container.client.audioQueue.handle(msg, node, track!);
                 }
             }

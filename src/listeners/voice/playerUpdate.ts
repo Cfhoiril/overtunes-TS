@@ -35,7 +35,7 @@ export class nodeRawEvent extends Listener {
     async run(shoukakuPlayer: ShoukakuPlayer) {
         const player = this.container.client.audioQueue.get(shoukakuPlayer.connection.guildId);
 
-        if (!player.current) return;
+        if (!player.current.info) return;
 
         let stop = new MessageButton()
             .setStyle('PRIMARY')

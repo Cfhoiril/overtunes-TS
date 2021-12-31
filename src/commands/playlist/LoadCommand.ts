@@ -36,32 +36,15 @@ export class PlaylistCommand extends Command {
                 ]
             })
         } else {
-            let player = this.container.client.manager.get(msg.guild?.id!);
-
-            if (!player) {
-                player = this.container.client.manager.create({
-                    guild: msg.guildId as string,
-                    voiceChannel: msg.member?.voice.channelId as string,
-                    textChannel: msg.channelId as string,
-                    volume: 75,
-                    selfDeafen: false,
-                })
-            }
-
-            if (player.state !== "CONNECTED") {
-                player.connect();
-                player.set("autoplay", false);
-            }
+            const player = this.container.client.audioQueue.get(msg.guild?.id);
+            const node = this.container.client.audioManager.getNode()
 
             const sg = data.Song
 
-            sg.map((c: any) => {
-                player?.queue.add(TrackUtils.buildUnresolved({
-                    title: c.Title,
-                    author: c.Author,
-                    duration: c.Duration,
-                }, msg.author));
-                if (!player?.playing && !player?.paused && !player?.queue?.size) player?.play();
+            sg.map(async (c: any) => {
+                const res = await node.rest.resolve(c.Title, "youtube");
+                const track = res.tracks.shift()
+                this.container.client.audioQueue.handle(msg, node, track!)
             })
 
             msg.channel.send({

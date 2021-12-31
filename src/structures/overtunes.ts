@@ -71,4 +71,4 @@ declare module "@sapphire/framework" {
     }
 }
 
-export = new Overtunes().login(config.token)
+export default Overtunes;

@@ -1,6 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Args, Command, CommandOptions } from "@sapphire/framework";
 import { Message, MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
+import { ShoukakuTrack } from "shoukaku";
 import playlist from "../../database/Manager/PlaylistManager";
 
 @ApplyOptions<CommandOptions>({
@@ -18,7 +19,7 @@ export class PlaylistCommand extends Command {
             ]
         });
 
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
         const data = await playlist.findOne({ User: msg.author.id, Playlist: argument.value });
 
         if (data) {
@@ -29,7 +30,7 @@ export class PlaylistCommand extends Command {
                 ]
             });
 
-            data.Song.push({ Title: player?.queue?.current?.title, Author: player?.queue?.current?.author, Duration: player?.queue?.current?.duration });
+            data.Song.push({ Title: player.current.info.title, Author: player.current.info.author, Duration: player.current.info.length });
 
             // * check the player if has more than 100 tracks
             if (player?.queue.length! > 100) {
@@ -40,8 +41,8 @@ export class PlaylistCommand extends Command {
                     ]
                 });
                 // ! slice track to 100
-                player?.queue.slice(0, 99).map((val) => {
-                    data.Song.push({ Title: val.title, Author: val.author, Duration: val.duration })
+                player?.queue.slice(0, 99).map((val: ShoukakuTrack) => {
+                    data.Song.push({ Title: val.info.title, Author: val.info.author, Duration: val.info.length })
                 })
 
                 data.save()
@@ -53,8 +54,8 @@ export class PlaylistCommand extends Command {
                     ]
                 })
             } else {
-                player?.queue.map((val) => {
-                    data.Song.push({ Title: val.title, Author: val.author, Duration: val.duration })
+                player?.queue.slice(0, 99).map((val: ShoukakuTrack) => {
+                    data.Song.push({ Title: val.info.title, Author: val.info.author, Duration: val.info.length })
                 })
 
                 data.save()

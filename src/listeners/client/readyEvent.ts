@@ -30,6 +30,8 @@ export class readyEvent extends Listener {
         process.on('unhandledRejection', () => { });
         process.on('uncaughtException', () => { }); //well this made for client not crashing when error 
 
+        await this.container.client.audioManager.spotify.requestToken()
+
         this.container.logger.info(chalk.green(`👋 Logged in as ${chalk.white(this.container.client.user?.username)}`));
     }
 }

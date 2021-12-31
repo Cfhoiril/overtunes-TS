@@ -3,7 +3,7 @@ import { Shard, ShardingManager } from "discord.js";
 import { join } from "path";
 import * as config from "./config.json";
 
-const shardClient = new ShardingManager(join(__dirname, "structures", "overtunes.js"), {
+const shardClient = new ShardingManager(join(__dirname, "structures", "overtunesLogin.js"), {
     respawn: true,
     token: config.token,
     totalShards: "auto"

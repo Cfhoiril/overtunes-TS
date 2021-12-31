@@ -16,7 +16,7 @@ import prefix from "../../database/Manager/GuildManager";
 export class MusicCommand extends Command {
     async messageRun(msg: Message, args: Args) {
         const argument = await args.restResult("string");
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
         let guildPrefix = await prefix.findOne({ id: msg.guild?.id! })
 
         if (!argument.success) return msg.channel.send({
@@ -26,17 +26,12 @@ export class MusicCommand extends Command {
         })
 
         const time = toMilliseconds(argument.value);
-        const position = player?.position;
-        const duration = player?.queue.current?.duration;
+        const position = player?.player.position;
+        const duration = player?.current.info.length;
 
         if (time <= duration!) {
-            if (time > position!) {
-                player?.seek(time);
-                msg.react('👌').catch(e => { })
-            } else {
-                player?.seek(time);
-                msg.react('👌').catch(e => { })
-            }
+            player.player.seekTo(time)
+            msg.react('👌').catch(e => { })
         } else {
             return msg.channel.send({
                 embeds: [new MessageEmbed()

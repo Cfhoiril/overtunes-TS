@@ -23,7 +23,7 @@ export class MusicCommand extends Command {
             .setTitle('Current song')
             .setDescription(`${player.current.info.title} [${player.current.info.requester}]`)
             .setColor(msg.guild?.me?.displayHexColor!)
-            .setFooter(`${toColonNotation(player?.position)} ${progress(bar, current, total, slider, size)[0]} ${player.current.info.isStream ? 'LIVE' : toColonNotation(player.current.info.length ?? 1000)}`)
+            .setFooter(`${toColonNotation(player?.player.position ?? 1000)} ${progress(bar, current, total, slider, size)[0]} ${player.current.info.isStream ? 'LIVE' : toColonNotation(player.current.info.length ?? 1000)}`)
         return msg.channel.send({ embeds: [now] });
     }
 }

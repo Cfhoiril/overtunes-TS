@@ -19,7 +19,7 @@ export class MusicCommand extends Command {
         })
 
         const position = Number(argument.value);
-        const player = this.container.client.manager.get(msg.guildId!);
+        const player = this.container.client.audioQueue.get(msg.guild?.id);
 
         if (!position || isNaN(position) || position < 0) {
             return msg.channel.send({
@@ -29,14 +29,14 @@ export class MusicCommand extends Command {
             })
         }
 
-        if (position > player?.queue?.size!) return msg.channel.send({
+        if (position > player?.queue?.length) return msg.channel.send({
             embeds: [new MessageEmbed()
                 .setColor("RED")
-                .setDescription(`No tracks at number ${position}, Total tracks in this guild: **${player?.queue?.size}**`)]
+                .setDescription(`No tracks at number ${position}, Total tracks in this guild: **${player?.queue?.length}**`)]
         });
 
 
-        player?.queue.remove(position - 1);
+        player?.queue.splice(position - 1, -1);
         msg.react('👌').catch(e => { })
     }
 }
