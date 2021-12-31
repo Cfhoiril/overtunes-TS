@@ -9,7 +9,7 @@ import Overtunes from "./overtunes";
 class ShoukakuHandler extends Shoukaku {
     spotify: LavasfyClient;
 
-    public constructor(client: Overtunes) {
+    public constructor(public client: Overtunes) {
         super(new Libraries.DiscordJS(client), privateLavalink, {
             moveOnDisconnect: true,
             reconnectInterval: 5000,
@@ -19,12 +19,12 @@ class ShoukakuHandler extends Shoukaku {
         });
 
         this.spotify = new LavasfyClient({
-            clientID: "93f4dd8ea4d94be685594c36e735c",
-            clientSecret: "314b997a5f8f49aba8aabd",
+            clientID: "93f4dd8ea4d94be685591fa4c36e735c",
+            clientSecret: "314b997a5f8f49abaadd14dcb0a8aabd",
             audioOnlyResults: true,
             useSpotifyMetadata: true,
             // @ts-ignore
-        }, [...client.audioManager.getNode()])
+        }, privateLavalink)
     }
 }
 
